@@ -19,7 +19,6 @@
                 <li><a href="#problem">痛点</a></li>
                 <li><a href="#solution">方案</a></li>
                 <li><a href="#features">功能</a></li>
-                <li><a href="#cases">案例</a></li>
                 <li><a href="#guide">使用</a></li>
                 <li><a href="#contact">联系</a></li>
             </ul>
@@ -30,7 +29,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <div class="badge">🦞 中关村北纬龙虾大赛 · 生产力赛道</div>
+                <div class="badge">🦞 基于 OpenClaw 智能体框架</div>
                 <h1>会议记录，从30分钟到2分钟</h1>
                 <p class="hero-desc">AI自动转录会议、提取任务、跟踪进度<br>让团队专注于真正重要的工作</p>
                 <p class="data-source">*基于20个团队内部测试数据</p>
@@ -152,34 +151,63 @@
             
             <!-- 4步流程 -->
             <div class="workflow">
-                <h3>4步完成会议自动化管理</h3>
+                <h3>🔄 全流程自动化管理</h3>
+                <p style="text-align: center; color: #94a3b8; margin-bottom: 30px;">
+                    OpenClaw 可部署在任意设备，无需人工干预，会议结束后自动完成全部流程
+                </p>
+                
                 <div class="workflow-steps">
                     <div class="workflow-step">
+                        <div class="step-icon">🎙️</div>
+                        <h4>智能录音采集</h4>
+                        <p style="font-size: 12px; color: #64748b;">
+                            💻 Windows/Mac 会议软件<br>
+                            📱 手机会议 App<br>
+                            📺 会议平板/电视<br>
+                            🎤 智能音箱
+                        </p>
+                        <span class="step-time">OpenClaw 常驻后台</span>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-icon">🤖</div>
+                        <h4>AI 自动处理</h4>
+                        <p style="font-size: 12px; color: #64748b;">
+                            📝 语音转文字<br>
+                            🎯 提取会议要点<br>
+                            📋 识别待办任务<br>
+                            👤 匹配负责人
+                        </p>
+                        <span class="step-time">无需人工操作</span>
+                    </div>
+                    
+                    <div class="workflow-arrow">→</div>
+                    
+                    <div class="workflow-step">
                         <div class="step-icon">📤</div>
-                        <h4>上传录音</h4>
-                        <p>支持MP3/WAV/M4A</p>
-                        <span class="step-time">2分钟完成</span>
+                        <h4>智能推送</h4>
+                        <p style="font-size: 12px; color: #64748b;">
+                            📧 邮件推送纪要<br>
+                            💬 飞书/钉钉/企微<br>
+                            📱 App 消息通知<br>
+                            🗄️ 知识库归档
+                        </p>
+                        <span class="step-time">实时送达</span>
                     </div>
+                    
                     <div class="workflow-arrow">→</div>
+                    
                     <div class="workflow-step">
-                        <div class="step-icon">📝</div>
-                        <h4>AI转录</h4>
-                        <p>语音识别准确率95%+</p>
-                        <span class="step-time">自动提取要点</span>
-                    </div>
-                    <div class="workflow-arrow">→</div>
-                    <div class="workflow-step">
-                        <div class="step-icon">📋</div>
-                        <h4>提取任务</h4>
-                        <p>智能识别待办事项</p>
-                        <span class="step-time">自动分配负责人</span>
-                    </div>
-                    <div class="workflow-arrow">→</div>
-                    <div class="workflow-step">
-                        <div class="step-icon">🔔</div>
-                        <h4>自动提醒</h4>
-                        <p>到期前自动通知</p>
-                        <span class="step-time">多平台支持</span>
+                        <div class="step-icon">⏰</div>
+                        <h4>自动跟踪提醒</h4>
+                        <p style="font-size: 12px; color: #64748b;">
+                            ⏰ 到期前 1天提醒<br>
+                            🔔 逾期自动升级<br>
+                            📊 进度实时同步<br>
+                            ✅ 完成自动归档
+                        </p>
+                        <span class="step-time">全程自动化</span>
                     </div>
                 </div>
             </div>
@@ -248,12 +276,41 @@
                 <div class="feature-info">
                     <div class="feature-icon-large">⏰</div>
                     <h3>自动提醒跟踪</h3>
-                    <p class="feature-desc">根据截止日期自动发送提醒，支持多通道通知，实时跟踪任务进度，到期不再遗漏</p>
-                    <ul class="feature-points">
-                        <li>✓ 定时任务调度（每天8点、16点检查）</li>
-                        <li>✓ 多通道通知（邮件/微信/钉钉/飞书）</li>
-                        <li>✓ 任务状态实时追踪</li>
+                    <p class="feature-desc">根据截止日期自动发送提醒，支持多通道通知，实时跟踪任务进度，让到期不再遗漏</p>
+                    
+                    <div class="notification-channels">
+                        <h4 style="color: #60a5fa; font-size: 14px; margin-bottom: 12px;">📱 支持的通知渠道</h4>
+                        <div class="channel-grid">
+                            <div class="channel-item">
+                                <span class="channel-icon">📧</span>
+                                <span class="channel-name">邮件</span>
+                                <span class="channel-desc">发送会议纪要和待办清单</span>
+                            </div>
+                            <div class="channel-item">
+                                <span class="channel-icon">💬</span>
+                                <span class="channel-name">飞书</span>
+                                <span class="channel-desc">群聊Bot推送+个人消息</span>
+                            </div>
+                            <div class="channel-item">
+                                <span class="channel-icon">🔔</span>
+                                <span class="channel-name">钉钉</span>
+                                <span class="channel-desc">工作通知+待办提醒</span>
+                            </div>
+                            <div class="channel-item">
+                                <span class="channel-icon">💼</span>
+                                <span class="channel-name">企业微信</span>
+                                <span class="channel-desc">应用消息+日程同步</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <ul class="feature-points" style="margin-top: 20px;">
+                        <li>✓ <strong>会前</strong>：会议开始前5分钟，自动提醒参会人员</li>
+                        <li>✓ <strong>会后</strong>：会议结束5分钟内，自动发送纪要给全员</li>
+                        <li>✓ <strong>任务到期前</strong>：提前1天/4小时/1小时，多渠道提醒负责人</li>
+                        <li>✓ <strong>逾期升级</strong>：任务逾期自动抄送上级，确保闭环</li>
                     </ul>
+                    
                     <div class="feature-effect">
                         <span class="effect-label">效果</span>
                         <span class="effect-value">任务按时完成率提升40%，遗漏减少90%</span>
@@ -374,69 +431,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- 用户场景故事 -->
-    <section id="cases" class="user-stories">
-        <div class="container">
-            <h2 class="section-title">他们已经在使用 MeetingMate AI</h2>
-            <p class="section-subtitle">真实案例，脱敏处理</p>
-            
-            <div class="stories-grid">
-                <div class="story-card">
-                    <div class="story-header">
-                        <div class="story-avatar">👨‍💼</div>
-                        <div class="story-info">
-                            <h4>某互联网公司产品团队</h4>
-                            <span>10人团队 · 使用3个月</span>
-                        </div>
-                    </div>
-                    <blockquote class="story-quote">
-                        "之前每周要花3小时整理会议记录，现在只要10分钟。任务遗漏的情况也基本没有了。"
-                    </blockquote>
-                    <p class="story-author">—— 产品经理 张先生</p>
-                    
-                    <div class="story-comparison">
-                        <div class="before">
-                            <h5>使用前</h5>
-                            <ul>
-                                <li>每周会议记录：3小时</li>
-                                <li>月均任务遗漏：5-8项</li>
-                                <li>历史决策查找：30分钟+</li>
-                            </ul>
-                        </div>
-                        <div class="after">
-                            <h5>使用后</h5>
-                            <ul>
-                                <li>每周会议记录：10分钟</li>
-                                <li>月均任务遗漏：0-1项</li>
-                                <li>历史决策查找：30秒</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="story-card">
-                    <div class="story-header">
-                        <div class="story-avatar">👩‍💼</div>
-                        <div class="story-info">
-                            <h4>某咨询公司项目组</h4>
-                            <span>6人团队 · 使用2个月</span>
-                        </div>
-                    </div>
-                    <blockquote class="story-quote">
-                        "客户会议很多，以前整理纪要经常要加班，现在会议结束就能立即发送纪要给客户，客户满意度明显提升。"
-                    </blockquote>
-                    <p class="story-author">—— 项目经理 李女士</p>
-                    
-                    <div class="story-result">
-                        <span class="result-label">效果</span>
-                        <span class="result-value">客户满意度提升，项目交付效率提高30%</span>
-                    </div>
-                </div>
-            </div>
-            <p class="stories-note">*基于内部测试数据，已脱敏处理</p>
         </div>
     </section>
 
@@ -582,11 +576,6 @@
                     <p>📧 13128614087@163.com</p>
                     <p>🌐 clawmate.cloud</p>
                     <p>🦞 Powered by OpenClaw</p>
-                </div>
-                <div class="footer-competition">
-                    <h4>比赛信息</h4>
-                    <p>中关村北纬龙虾大赛</p>
-                    <p>生产力龙虾赛道</p>
                     <p>© 2026 MeetingMate AI</p>
                 </div>
             </div>

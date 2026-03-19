@@ -1182,3 +1182,48 @@ body {
         flex-direction: column;
     }
 }
+
+/* 通知渠道网格 */
+.notification-channels {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.channel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.channel-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.channel-icon {
+    font-size: 20px;
+}
+
+.channel-name {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.channel-desc {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .channel-grid {
+        grid-template-columns: 1fr;
+    }
+}
