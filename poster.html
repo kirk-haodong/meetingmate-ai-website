@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetingMate AI - 龙虾大赛海报</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+        .poster {
+            width: 900px;
+            height: 600px;
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.95), rgba(15, 23, 42, 0.98));
+            border-radius: 20px;
+            border: 2px solid rgba(37, 99, 235, 0.5);
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8),
+                        0 0 100px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            padding: 60px;
+        }
+        
+        /* 背景装饰 */
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.1) 40px, rgba(255,255,255,0.1) 41px),
+                repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.1) 40px, rgba(255,255,255,0.1) 41px);
+        }
+        
+        /* 左侧内容 */
+        .content {
+            flex: 1;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #60a5fa;
+            font-size: 14px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+        
+        .badge .lobster {
+            font-size: 18px;
+            animation: wave 2s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+        
+        h1 {
+            color: #fff;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        h1 .highlight {
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 20px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            display: block;
+        }
+        
+        .stat-value.up {
+            color: #34d399;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .feature-tag {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+        
+        .cta {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(37, 99, 235, 0.5);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+        
+        /* 右侧动画区域 */
+        .visual {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .lobster-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+        }
+        
+        .lobster {
+            font-size: 120px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 20px 40px rgba(239, 68, 68, 0.4));
+            z-index: 2;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-15px); }
+        }
+        
+        .glow {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+        
+        /* 会议气泡 */
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .bubble {
+            position: absolute;
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 11px;
+            color: #60a5fa;
+            animation: float-up 4s ease-in-out infinite;
+        }
+        
+        .bubble:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .bubble:nth-child(2) {
+            top: 30%;
+            right: 5%;
+            animation-delay: 1s;
+        }
+        
+        .bubble:nth-child(3) {
+            bottom: 20%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+        
+        .bubble:nth-child(4) {
+            bottom: 40%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+        
+        @keyframes float-up {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(-20px); opacity: 1; }
+        }
+        
+        /* 产品界面预览 */
+        .ui-preview {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+        
+        .ui-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #eab308; }
+        .dot.green { background: #22c55e; }
+        
+        .ui-title {
+            font-size: 11px;
+            color: #64748b;
+            margin-left: 5px;
+        }
+        
+        .ui-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .ui-row {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .ui-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: 6px;
+            height: 30px;
+            flex: 1;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background: rgba(255,255,255,0.03); }
+            50% { background: rgba(255,255,255,0.06); }
+            100% { background: rgba(255,255,255,0.03); }
+        }
+        
+        /* 角落装饰 */
+        .corner {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(37, 99, 235, 0.2);
+        }
+        
+        .corner.top-left {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 20px 0 0 0;
+        }
+        
+        .corner.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 20px 0;
+        }
+        
+        /* 底部链接 */
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="bg-pattern"></div>
+        <div class="corner top-left"></div>
+        <div class="corner bottom-right"></div>
+        
+        <div class="content">
+            <div class="badge">
+                <span class="lobster">🦞</span>
+                <span>中关村北纬龙虾大赛 · 生产力赛道</span>
+            </div>
+            
+            <h1>
+                会议记录<br>
+                从<span class="highlight">30分钟</span>到<span class="highlight">2分钟</span>
+            </h1>
+            
+            <p class="subtitle">
+                基于 OpenClaw 的全流程自动化会议助手<br>
+                AI转录 · 自动提取任务 · 智能提醒跟踪
+            </p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-value up">93%</span>
+                    <span class="stat-label">时间节省</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value up">88%</span>
+                    <span class="stat-label">遗漏减少</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value up">42%</span>
+                    <span class="stat-label">效率提升</span>
+                </div>
+            </div>
+            
+            <div class="features">
+                <span class="feature-tag">🎙️ AI转录</span>
+                <span class="feature-tag">📋 任务提取</span>
+                <span class="feature-tag">⏰ 自动提醒</span>
+                <span class="feature-tag">🔍 知识库</span>
+                <span class="feature-tag">📊 效率分析</span>
+            </div>
+            
+            <div class="cta">
+                <a href="https://github.com/kirk-haodong/meetingmate-ai" class="btn btn-primary">🚀 立即体验</a>
+                <a href="https://clawmate.cloud" class="btn btn-secondary">📖 了解更多</a>
+            </div>
+        </div>
+        
+        <div class="visual">
+            <div class="lobster-container">
+                <div class="glow"></div>
+                <div class="lobster">🦞</div>
+                
+                <div class="bubbles">
+                    <div class="bubble">📝 转录中...</div>
+                    <div class="bubble">✅ 任务+3</div>
+                    <div class="bubble">⏰ 提醒已设置</div>
+                    <div class="bubble">📧 邮件已发送</div>
+                </div>
+            </div>
+            
+            <div class="ui-preview">
+                <div class="ui-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                    <span class="ui-title">MeetingMate AI</span>
+                </div>
+                <div class="ui-content">
+                    <div class="ui-row">
+                        <div class="ui-box" style="flex: 2;"></div>
+                        <div class="ui-box"></div>
+                    </div>
+                    <div class="ui-row">
+                        <div class="ui-box"></div>
+                        <div class="ui-box"></div>
+                        <div class="ui-box"></div>
+                    </div>
+                    <div class="ui-row">
+                        <div class="ui-box" style="flex: 1.5;"></div>
+                        <div class="ui-box"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            clawmate.cloud · GitHub: kirk-haodong/meetingmate-ai
+        </div>
+    </div>
+</body>
+</html>
