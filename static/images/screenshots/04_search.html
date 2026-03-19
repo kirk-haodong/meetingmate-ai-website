@@ -12,96 +12,84 @@
             color: #e2e8f0;
             min-height: 100vh;
             overflow: auto;
-        }
-        .app {
-            display: flex;
-            height: 100%;
-        }
-        .sidebar {
-            width: 240px;
-            background: #1e293b;
-            border-right: 1px solid #334155;
             padding: 20px;
         }
-        .logo {
+        .app {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .top-nav {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: #fff;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 8px;
+            background: #1e293b;
+            border-radius: 12px;
+            overflow-x: auto;
         }
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
+            padding: 10px 16px;
             border-radius: 8px;
-            margin-bottom: 8px;
             color: #94a3b8;
             font-size: 14px;
+            white-space: nowrap;
         }
         .nav-item.active {
             background: rgba(37, 99, 235, 0.2);
             color: #60a5fa;
         }
-        .main {
-            flex: 1;
-            padding: 30px;
-            overflow: hidden;
-        }
         .header {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
-        .header h1 { font-size: 28px; color: #fff; }
+        .header h1 { font-size: 24px; color: #fff; }
         .search-container {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
         .search-box {
             display: flex;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         .search-input {
             flex: 1;
-            padding: 14px 20px;
+            padding: 12px 16px;
             background: rgba(255,255,255,0.05);
             border: 1px solid #334155;
             border-radius: 8px;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
         }
         .search-btn {
-            padding: 14px 28px;
+            padding: 12px 24px;
             background: #2563eb;
             color: #fff;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
         }
         .search-tags {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .search-tag {
-            padding: 6px 14px;
+            padding: 6px 12px;
             background: rgba(37, 99, 235, 0.1);
             border: 1px solid rgba(37, 99, 235, 0.3);
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             color: #60a5fa;
         }
         .results-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .results-count { color: #94a3b8; font-size: 14px; }
         .results-count span { color: #fff; font-weight: 600; }
@@ -109,20 +97,20 @@
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
         .meeting-header {
             display: flex;
             justify-content: space-between;
             align-items: start;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .meeting-title {
-            font-size: 17px;
+            font-size: 16px;
             color: #fff;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .highlight {
             background: rgba(245, 158, 11, 0.2);
@@ -132,31 +120,31 @@
         }
         .meeting-meta {
             color: #64748b;
-            font-size: 13px;
+            font-size: 12px;
         }
         .meeting-date {
             background: rgba(255,255,255,0.05);
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             color: #94a3b8;
         }
         .meeting-excerpt {
             color: #94a3b8;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 10px;
         }
         .meeting-tags {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
         .tag {
-            padding: 4px 10px;
+            padding: 3px 8px;
             background: rgba(16, 185, 129, 0.1);
             color: #34d399;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
         }
         .tag.decision {
             background: rgba(245, 158, 11, 0.1);
@@ -166,73 +154,70 @@
 </head>
 <body>
     <div class="app">
-        <aside class="sidebar">
-            <div class="logo">🦞 MeetingMate</div>
-            <nav>
-                <div class="nav-item">📋 会议纪要</div>
-                <div class="nav-item">✅ 任务列表</div>
-                <div class="nav-item active">🔍 知识库</div>
-                <div class="nav-item">📊 效率分析</div>
-            </nav>
-        </aside>
-        <main class="main">
-            <div class="header">
-                <h1>🔍 会议知识库</h1>
+        <div class="top-nav">
+            <div class="nav-item">📋 会议纪要</div>
+            <div class="nav-item">✅ 任务列表</div>
+            <div class="nav-item active">🔍 知识库</div>
+            <div class="nav-item">⏰ 自动提醒</div>
+            <div class="nav-item">📊 效率分析</div>
+        </div>
+        
+        <div class="header">
+            <h1>🔍 会议知识库</h1>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" value="Q2产品路线图" placeholder="搜索历史会议、决策、任务...">
+                <button class="search-btn">搜索</button>
             </div>
-            
-            <div class="search-container">
-                <div class="search-box">
-                    <input type="text" class="search-input" value="Q2产品路线图" placeholder="搜索历史会议、决策、任务...">
-                    <button class="search-btn">搜索</button>
-                </div>
-                <div class="search-tags">
-                    <span class="search-tag">🕐 最近30天</span>
-                    <span class="search-tag">👤 张三</span>
-                    <span class="search-tag">📌 重要决策</span>
-                    <span class="search-tag">🎯 Q2规划</span>
-                </div>
+            <div class="search-tags">
+                <span class="search-tag">🕐 最近30天</span>
+                <span class="search-tag">👤 张三</span>
+                <span class="search-tag">📌 重要决策</span>
+                <span class="search-tag">🎯 Q2规划</span>
             </div>
-            
-            <div class="results-header">
-                <div class="results-count">找到 <span>3</span> 个相关会议</div>
+        </div>
+        
+        <div class="results-header">
+            <div class="results-count">找到 <span>3</span> 个相关会议</div>
+        </div>
+        
+        <div class="meeting-card">
+            <div class="meeting-header">
+                <div>
+                    <div class="meeting-title">📅 <span class="highlight">产品周会</span></div>
+                    <div class="meeting-meta">参会：张三、李四、王五、赵六 · 时长：60分钟</div>
+                </div>
+                <div class="meeting-date">2026-03-19</div>
             </div>
-            
-            <div class="meeting-card">
-                <div class="meeting-header">
-                    <div>
-                        <div class="meeting-title">📅 <span class="highlight">产品周会</span></div>
-                        <div class="meeting-meta">参会：张三、李四、王五、赵六 · 时长：60分钟</div>
-                    </div>
-                    <div class="meeting-date">2026-03-19</div>
-                </div>
-                <div class="meeting-excerpt">
-                    ...确定了<strong style="color: #fbbf24;">Q2产品路线图</strong>，优先级为：AI会议纪要功能优化 > 多平台集成...
-                </div>
-                <div class="meeting-tags">
-                    <span class="tag">🎯 3个要点</span>
-                    <span class="tag decision">💡 1个决策</span>
-                    <span class="tag">✅ 4个任务</span>
-                </div>
+            <div class="meeting-excerpt">
+                ...确定了<strong style="color: #fbbf24;">Q2产品路线图</strong>，优先级为：AI会议纪要功能优化 &gt; 多平台集成...
             </div>
-            
-            <div class="meeting-card">
-                <div class="meeting-header">
-                    <div>
-                        <div class="meeting-title">📅 技术评审会</div>
-                        <div class="meeting-meta">参会：张三、李四、赵六 · 时长：90分钟</div>
-                    </div>
-                    <div class="meeting-date">2026-03-17</div>
-                </div>
-                <div class="meeting-excerpt">
-                    ...讨论了<strong style="color: #fbbf24;">Q2</strong>技术架构调整方案，确定了采用MiniMax作为备用AI模型...
-                </div>
-                <div class="meeting-tags">
-                    <span class="tag">🎯 4个要点</span>
-                    <span class="tag decision">💡 2个决策</span>
-                    <span class="tag">✅ 5个任务</span>
-                </div>
+            <div class="meeting-tags">
+                <span class="tag">🎯 3个要点</span>
+                <span class="tag decision">💡 1个决策</span>
+                <span class="tag">✅ 4个任务</span>
             </div>
-        </main>
+        </div>
+        
+        <div class="meeting-card">
+            <div class="meeting-header">
+                <div>
+                    <div class="meeting-title">📅 技术评审会</div>
+                    <div class="meeting-meta">参会：张三、李四、赵六 · 时长：90分钟</div>
+                </div>
+                <div class="meeting-date">2026-03-17</div>
+            </div>
+            <div class="meeting-excerpt">
+                ...讨论了<strong style="color: #fbbf24;">Q2</strong>技术架构调整方案，确定了采用MiniMax作为备用AI模型...
+            </div>
+            <div class="meeting-tags">
+                <span class="tag">🎯 4个要点</span>
+                <span class="tag decision">💡 2个决策</span>
+                <span class="tag">✅ 5个任务</span>
+            </div>
+        </div>
     </div>
 </body>
 </html>
