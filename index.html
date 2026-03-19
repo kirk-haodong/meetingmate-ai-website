@@ -522,8 +522,14 @@
                     <div class="step-number">1</div>
                     <div class="step-content">
                         <h3>安装 OpenClaw</h3>
+                        <p>根据你的操作系统选择安装方式：</p>
                         <div class="code-block">
-                            <code>npm install -g openclaw</code>
+                            <code># macOS / Linux</code><br>
+                            <code>curl -fsSL https://openclaw.ai/install.sh | bash</code>
+                        </div>
+                        <div class="code-block">
+                            <code># Windows (PowerShell)</code><br>
+                            <code>iwr -useb https://openclaw.ai/install.ps1 | iex</code>
                         </div>
                     </div>
                 </div>
@@ -535,7 +541,7 @@
                         <p>在 <code>~/.openclaw/config.json</code> 中配置：</p>
                         <ul>
                             <li>Whisper API 密钥（语音识别）</li>
-                            <li>MiniMax/OpenAI API 密钥（文本生成）</li>
+                            <li>MiniMax / OpenAI API 密钥（文本生成）</li>
                         </ul>
                     </div>
                 </div>
@@ -543,10 +549,24 @@
                 <div class="guide-step">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3>运行 Skill</h3>
+                        <h3>安装并运行 Skill</h3>
+                        <p>方式一：通过 Git 克隆安装</p>
                         <div class="code-block">
-                            <code>openclaw run meeting-transcriber --audio meeting.mp3</code>
+                            <code>git clone https://github.com/kirk-haodong/meetingmate-ai.git</code><br>
+                            <code>cd meetingmate-ai</code><br>
+                            <code>pip install -r requirements.txt</code><br>
+                            <code>python scripts/meetingmate_workflow.py --process-meeting</code>
                         </div>
+                        <p style="margin-top: 15px;">方式二：通过 OpenClaw 对话安装</p>
+                        <div class="code-block">
+                            <code>帮我安装并运行这个 skill: kirk-haodong/meetingmate-ai</code>
+                        </div>
+                        <p class="step-result">安装完成后，系统将自动监听会议录音，AI 自动转录、提取任务、发送提醒</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
                         <p class="step-result">2分钟后，你将获得：完整会议纪要、待办任务列表、可搜索的会议记录</p>
                     </div>
                 </div>

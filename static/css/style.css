@@ -1227,3 +1227,36 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* 截图占位符优化 */
+.screenshot-placeholder {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));
+    border: 2px dashed rgba(37, 99, 235, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.screenshot-placeholder::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(37, 99, 235, 0.05) 10px,
+        rgba(37, 99, 235, 0.05) 20px
+    );
+}
+
+.screenshot-placeholder span {
+    position: relative;
+    z-index: 1;
+    background: rgba(15, 23, 42, 0.9);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+}
