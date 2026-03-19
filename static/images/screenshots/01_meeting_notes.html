@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeetingMate AI - 会议纪要</title>
+    <title>MeetingMate AI - 产品演示</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -33,17 +33,27 @@
             color: #94a3b8;
             font-size: 14px;
             white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .nav-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
         }
         .nav-item.active {
             background: rgba(37, 99, 235, 0.2);
             color: #60a5fa;
         }
-        .meeting-card {
+        .content-area {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 12px;
             padding: 24px;
+            min-height: 400px;
         }
+        
+        /* 会议纪要样式 */
         .meeting-header {
             display: flex;
             justify-content: space-between;
@@ -125,69 +135,658 @@
             color: #94a3b8;
             font-size: 12px;
         }
+        
+        /* 任务列表样式 */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        .filter-btn.active {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 13px;
+        }
+        .task-table-header {
+            display: grid;
+            grid-template-columns: 40px 2fr 100px 100px 80px 80px;
+            gap: 12px;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid #334155;
+            color: #64748b;
+            font-size: 12px;
+        }
+        .task-row {
+            display: grid;
+            grid-template-columns: 40px 2fr 100px 100px 80px 80px;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #334155;
+            align-items: center;
+        }
+        .avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #fff;
+        }
+        .priority-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .status {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        /* 转录样式 */
+        .waveform {
+            height: 70px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa, #3b82f6, #2563eb);
+            border-radius: 4px;
+            margin: 16px 0;
+        }
+        .transcript-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .timestamp {
+            color: #64748b;
+            font-size: 12px;
+            min-width: 50px;
+        }
+        .speaker {
+            color: #60a5fa;
+            font-weight: 500;
+            min-width: 50px;
+            font-size: 14px;
+        }
+        .highlight {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        /* 知识库样式 */
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .search-btn {
+            padding: 12px 24px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .search-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .search-tag {
+            padding: 6px 12px;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #60a5fa;
+        }
+        .tag {
+            padding: 3px 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .tag.decision {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+        }
+        
+        /* 效率分析样式 */
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            gap: 20px;
+            height: 140px;
+            padding: 10px 0;
+        }
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .bar {
+            width: 50px;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            border-radius: 6px 6px 0 0;
+        }
+        .pie-chart {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0deg 150deg, #8b5cf6 150deg 270deg, #10b981 270deg 360deg);
+            margin: 0 auto 16px;
+            position: relative;
+        }
+        .pie-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        /* 自动提醒样式 */
+        .channel-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .reminder-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            border-left: 3px solid #2563eb;
+            margin-bottom: 10px;
+        }
+        .reminder-time {
+            width: 60px;
+            color: #60a5fa;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .reminder-target {
+            padding: 3px 8px;
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .channel-status {
+            padding: 5px 10px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+        
+        .view-all-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+        .view-all-btn:hover {
+            background: rgba(37, 99, 235, 0.3);
+        }
     </style>
 </head>
 <body>
     <div class="app">
         <div class="top-nav">
-            <div class="nav-item active">📋 会议纪要</div>
-            <div class="nav-item">✅ 任务列表</div>
-            <div class="nav-item">🔍 知识库</div>
-            <div class="nav-item">⏰ 自动提醒</div>
-            <div class="nav-item">📊 效率分析</div>
+            <div class="nav-item active" onclick="showView('notes')">📋 会议纪要</div>
+            <div class="nav-item" onclick="showView('tasks')">✅ 任务列表</div>
+            <div class="nav-item" onclick="showView('search')">🔍 知识库</div>
+            <div class="nav-item" onclick="showView('reminder')">⏰ 自动提醒</div>
+            <div class="nav-item" onclick="showView('analytics')">📊 效率分析</div>
         </div>
         
-        <div class="meeting-card">
-            <div class="meeting-header">
-                <div class="meeting-title">
-                    <h2>📅 产品周会</h2>
-                    <div class="meeting-meta">2026年3月19日 · 14:00-15:00 · 参会：张三、李四、王五、赵六</div>
+        <div class="content-area" id="contentArea">
+            <!-- 会议纪要 -->
+            <div id="view-notes">
+                <div class="meeting-header">
+                    <div class="meeting-title">
+                        <h2>📅 产品周会</h2>
+                        <div class="meeting-meta">2026年3月19日 · 14:00-15:00 · 参会：张三、李四、王五、赵六</div>
+                    </div>
+                    <span class="meeting-badge">✓ AI已生成</span>
                 </div>
-                <span class="meeting-badge">✓ AI已生成</span>
+                
+                <div class="section">
+                    <h3>🎯 会议要点</h3>
+                    <ul>
+                        <li><strong>Q2产品路线图确定</strong> - 优先级：AI会议纪要优化 > 多平台集成 > 效率分析模块</li>
+                        <li><strong>新功能需求讨论</strong> - 用户反馈希望支持实时转录，计划Q2完成原型</li>
+                        <li><strong>市场推广策略</strong> - 参加中关村北纬龙虾大赛，目标种子用户100+</li>
+                    </ul>
+                </div>
+                
+                <div class="section">
+                    <h3>✅ 待办任务</h3>
+                    <div class="task-list">
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">完成用户调研报告</div>
+                                <div class="task-meta">来自：产品周会</div>
+                            </div>
+                            <span class="task-assignee">张三</span>
+                            <span class="task-deadline">明天</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">设计新版首页原型</div>
+                                <div class="task-meta">来自：产品周会</div>
+                            </div>
+                            <span class="task-assignee">李四</span>
+                            <span class="task-deadline">3月22日</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">准备比赛演示材料</div>
+                                <div class="task-meta">来自：产品周会</div>
+                            </div>
+                            <span class="task-assignee">王五</span>
+                            <span class="task-deadline">3月25日</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <a class="view-all-btn" onclick="showView('tasks')">查看全部任务 →</a>
+                </div>
             </div>
             
-            <div class="section">
-                <h3>🎯 会议要点</h3>
-                <ul>
-                    <li><strong>Q2产品路线图确定</strong> - 优先级：AI会议纪要优化 &gt; 多平台集成 &gt; 效率分析模块</li>
-                    <li><strong>新功能需求讨论</strong> - 用户反馈希望支持实时转录，计划Q2完成原型</li>
-                    <li><strong>市场推广策略</strong> - 参加中关村北纬龙虾大赛，目标种子用户100+</li>
-                </ul>
+            <!-- 任务列表 -->
+            <div id="view-tasks" style="display: none;">
+                <div class="filter-bar">
+                    <div class="filter-btn active">全部</div>
+                    <div class="filter-btn">待处理</div>
+                    <div class="filter-btn">进行中</div>
+                    <div class="filter-btn">已逾期</div>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">待办任务</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">进行中</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #f87171;">1</div>
+                        <div class="stat-label">已逾期</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #34d399;">12</div>
+                        <div class="stat-label">已完成</div>
+                    </div>
+                </div>
+                
+                <div class="task-table-header">
+                    <div></div>
+                    <div>任务内容</div>
+                    <div>负责人</div>
+                    <div>截止日期</div>
+                    <div>优先级</div>
+                    <div>状态</div>
+                </div>
+                <div class="task-row">
+                    <div><div class="task-checkbox"></div></div>
+                    <div>
+                        <div style="color: #fff; font-size: 14px;">完成用户调研报告</div>
+                        <div style="color: #64748b; font-size: 12px;">来自：产品周会</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <div class="avatar">张</div>
+                        <span style="font-size:13px;">张三</span>
+                    </div>
+                    <div style="color: #94a3b8; font-size: 13px;">3月20日</div>
+                    <div><span class="priority-high">高</span></div>
+                    <div><span class="status">待处理</span></div>
+                </div>
+                <div class="task-row">
+                    <div><div class="task-checkbox"></div></div>
+                    <div>
+                        <div style="color: #fff; font-size: 14px;">设计新版首页原型</div>
+                        <div style="color: #64748b; font-size: 12px;">来自：产品周会</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <div class="avatar">李</div>
+                        <span style="font-size:13px;">李四</span>
+                    </div>
+                    <div style="color: #94a3b8; font-size: 13px;">3月22日</div>
+                    <div><span class="priority-high">高</span></div>
+                    <div><span class="status">进行中</span></div>
+                </div>
+                <div class="task-row">
+                    <div><div class="task-checkbox"></div></div>
+                    <div>
+                        <div style="color: #fff; font-size: 14px;">更新API文档 ⚠️ 逾期</div>
+                        <div style="color: #64748b; font-size: 12px;">来自：技术评审会</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <div class="avatar">张</div>
+                        <span style="font-size:13px;">张三</span>
+                    </div>
+                    <div style="color: #f87171; font-size: 13px;">3月18日</div>
+                    <div><span class="priority-high">高</span></div>
+                    <div><span class="status">待处理</span></div>
+                </div>
             </div>
             
-            <div class="section">
-                <h3>✅ 待办任务</h3>
-                <div class="task-list">
-                    <div class="task-item">
-                        <div class="task-checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">完成用户调研报告</div>
-                            <div class="task-meta">来自：产品周会</div>
+            <!-- 知识库 -->
+            <div id="view-search" style="display: none;">
+                <div class="search-box">
+                    <input type="text" class="search-input" value="Q2产品路线图" placeholder="搜索历史会议、决策、任务...">
+                    <button class="search-btn">搜索</button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tag">🕐 最近30天</span>
+                    <span class="search-tag">👤 张三</span>
+                    <span class="search-tag">📌 重要决策</span>
+                    <span class="search-tag">🎯 Q2规划</span>
+                </div>
+                <div style="color: #94a3b8; font-size: 14px; margin-bottom: 16px;">找到 <strong style="color: #fff;">3</strong> 个相关会议</div>
+                
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <div>
+                            <div style="color: #fff; font-size: 16px; font-weight: 600; margin-bottom: 4px;">📅 <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; padding: 2px 6px; border-radius: 4px;">产品周会</span></div>
+                            <div style="color: #64748b; font-size: 12px;">参会：张三、李四、王五、赵六 · 时长：60分钟</div>
                         </div>
-                        <span class="task-assignee">张三</span>
-                        <span class="task-deadline">明天</span>
+                        <div style="background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #94a3b8;">2026-03-19</div>
                     </div>
-                    <div class="task-item">
-                        <div class="task-checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">设计新版首页原型</div>
-                            <div class="task-meta">来自：产品周会</div>
-                        </div>
-                        <span class="task-assignee">李四</span>
-                        <span class="task-deadline">3月22日</span>
+                    <div style="color: #94a3b8; font-size: 13px; line-height: 1.5; margin-bottom: 10px;">
+                        ...确定了<strong style="color: #fbbf24;">Q2产品路线图</strong>，优先级为：AI会议纪要功能优化 > 多平台集成...
                     </div>
-                    <div class="task-item">
-                        <div class="task-checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">准备比赛演示材料</div>
-                            <div class="task-meta">来自：产品周会</div>
+                    <div style="display: flex; gap: 6px;">
+                        <span class="tag">🎯 3个要点</span>
+                        <span class="tag decision">💡 1个决策</span>
+                        <span class="tag">✅ 4个任务</span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <div>
+                            <div style="color: #fff; font-size: 16px; font-weight: 600; margin-bottom: 4px;">📅 技术评审会</div>
+                            <div style="color: #64748b; font-size: 12px;">参会：张三、李四、赵六 · 时长：90分钟</div>
                         </div>
-                        <span class="task-assignee">王五</span>
-                        <span class="task-deadline">3月25日</span>
+                        <div style="background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #94a3b8;">2026-03-17</div>
+                    </div>
+                    <div style="color: #94a3b8; font-size: 13px; line-height: 1.5; margin-bottom: 10px;">
+                        ...讨论了<strong style="color: #fbbf24;">Q2</strong>技术架构调整方案，确定了采用MiniMax作为备用AI模型...
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <span class="tag">🎯 4个要点</span>
+                        <span class="tag decision">💡 2个决策</span>
+                        <span class="tag">✅ 5个任务</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 自动提醒 -->
+            <div id="view-reminder" style="display: none;">
+                <div class="stats-row" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #34d399;">156</div>
+                        <div class="stat-label">本月已发送</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">98.5%</div>
+                        <div class="stat-label">送达成功率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #fbbf24;">12</div>
+                        <div class="stat-label">待发送</div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <div class="channel-icon">📧</div>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-size: 16px; margin-bottom: 2px;">邮件通知</div>
+                            <div style="color: #64748b; font-size: 12px;">会议纪要自动发送给参会人员</div>
+                        </div>
+                        <span class="channel-status">✓ 已启用</span>
+                    </div>
+                    
+                    <div class="reminder-item">
+                        <span class="reminder-time">会前</span>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-size: 13px; margin-bottom: 2px;">会议开始提醒</div>
+                            <div style="color: #64748b; font-size: 11px;">会议开始前5分钟发送提醒</div>
+                        </div>
+                        <span class="reminder-target">所有参会人</span>
+                    </div>
+                    <div class="reminder-item">
+                        <span class="reminder-time">会后</span>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-size: 13px; margin-bottom: 2px;">会议纪要发送</div>
+                            <div style="color: #64748b; font-size: 11px;">会议结束5分钟内自动发送纪要</div>
+                        </div>
+                        <span class="reminder-target">所有参会人</span>
+                    </div>
+                    <div class="reminder-item">
+                        <span class="reminder-time">到期前</span>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-size: 13px; margin-bottom: 2px;">任务截止提醒</div>
+                            <div style="color: #64748b; font-size: 11px;">任务到期前1天、4小时、1小时提醒</div>
+                        </div>
+                        <span class="reminder-target">任务负责人</span>
+                    </div>
+                    <div class="reminder-item">
+                        <span class="reminder-time" style="color: #f87171;">逾期</span>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-size: 13px; margin-bottom: 2px;">逾期升级提醒</div>
+                            <div style="color: #64748b; font-size: 11px;">任务逾期自动抄送上级</div>
+                        </div>
+                        <span class="reminder-target">上级+负责人</span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="channel-icon" style="background: linear-gradient(135deg, #10b981, #059669);">💬</div>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-size: 16px; margin-bottom: 2px;">飞书机器人</div>
+                            <div style="color: #64748b; font-size: 12px;">群聊Bot推送+个人消息</div>
+                        </div>
+                        <span class="channel-status">✓ 已启用</span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="channel-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🔔</div>
+                        <div style="flex: 1;">
+                            <div style="color: #fff; font-size: 16px; margin-bottom: 2px;">钉钉机器人</div>
+                            <div style="color: #64748b; font-size: 12px;">工作通知+待办提醒</div>
+                        </div>
+                        <span class="channel-status">✓ 已启用</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 效率分析 -->
+            <div id="view-analytics" style="display: none;">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📅</div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">本月会议数</div>
+                        <div style="color: #34d399; font-size: 12px; margin-top: 6px;">↑ 20%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="font-size: 24px; margin-bottom: 8px;">⏱️</div>
+                        <div class="stat-value">18.5</div>
+                        <div class="stat-label">总时长(h)</div>
+                        <div style="color: #34d399; font-size: 12px; margin-top: 6px;">↓ 15%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="font-size: 24px; margin-bottom: 8px;">✅</div>
+                        <div class="stat-value" style="color: #34d399;">85%</div>
+                        <div class="stat-label">任务完成率</div>
+                        <div style="color: #34d399; font-size: 12px; margin-top: 6px;">↑ 12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="font-size: 24px; margin-bottom: 8px;">⚡</div>
+                        <div class="stat-value">52</div>
+                        <div class="stat-label">平均时长(分)</div>
+                        <div style="color: #34d399; font-size: 12px; margin-top: 6px;">↓ 8分</div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px;">
+                        <div style="color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 16px;">📈 每周会议时长趋势</div>
+                        <div class="bar-chart">
+                            <div class="bar-item">
+                                <div style="color: #fff; font-size: 13px; font-weight: 600;">4.5h</div>
+                                <div class="bar" style="height: 50px;"></div>
+                                <div style="color: #64748b; font-size: 12px;">第1周</div>
+                            </div>
+                            <div class="bar-item">
+                                <div style="color: #fff; font-size: 13px; font-weight: 600;">6.0h</div>
+                                <div class="bar" style="height: 80px;"></div>
+                                <div style="color: #64748b; font-size: 12px;">第2周</div>
+                            </div>
+                            <div class="bar-item">
+                                <div style="color: #fff; font-size: 13px; font-weight: 600;">3.5h</div>
+                                <div class="bar" style="height: 40px;"></div>
+                                <div style="color: #64748b; font-size: 12px;">第3周</div>
+                            </div>
+                            <div class="bar-item">
+                                <div style="color: #fff; font-size: 13px; font-weight: 600;">4.5h</div>
+                                <div class="bar" style="height: 50px;"></div>
+                                <div style="color: #64748b; font-size: 12px;">第4周</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px;">
+                        <div style="color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 16px;">🥧 会议类型分布</div>
+                        <div class="pie-chart">
+                            <div class="pie-center">12</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                                <div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 3px;"></div>
+                                <span style="color: #94a3b8;">产品会议</span>
+                                <span style="color: #fff; margin-left: auto; font-weight: 600;">5</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                                <div style="width: 12px; height: 12px; background: #8b5cf6; border-radius: 3px;"></div>
+                                <span style="color: #94a3b8;">技术评审</span>
+                                <span style="color: #fff; margin-left: auto; font-weight: 600;">4</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                                <div style="width: 12px; height: 12px; background: #10b981; border-radius: 3px;"></div>
+                                <span style="color: #94a3b8;">客户沟通</span>
+                                <span style="color: #fff; margin-left: auto; font-weight: 600;">3</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <script>
+        function showView(viewName) {
+            // 隐藏所有视图
+            document.getElementById('view-notes').style.display = 'none';
+            document.getElementById('view-tasks').style.display = 'none';
+            document.getElementById('view-search').style.display = 'none';
+            document.getElementById('view-reminder').style.display = 'none';
+            document.getElementById('view-analytics').style.display = 'none';
+            
+            // 显示选中的视图
+            document.getElementById('view-' + viewName).style.display = 'block';
+            
+            // 更新导航状态
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>
