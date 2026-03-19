@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetingMate AI - 安装演示</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0c0c0c;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.6;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .terminal {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .line {
+            margin: 8px 0;
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+        }
+        .comment { color: #6a9955; }
+        .prompt { color: #00ff00; }
+        .command { color: #fff; }
+        .success { color: #4ec9b0; }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff00;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="header">MeetingMate AI 安装演示 ~ 快速开始</div>
+        <div id="content"></div>
+        <span class="cursor"></span>
+    </div>
+    
+    <script>
+        const lines = [
+            { text: '# macOS / Linux 安装 OpenClaw', type: 'comment', delay: 500 },
+            { text: '', type: 'empty', delay: 200 },
+            { text: '$ curl -fsSL https://openclaw.ai/install.sh | bash', type: 'command', delay: 2500, typeEffect: true },
+            { text: '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current', type: 'output', delay: 100 },
+            { text: '                                 Dload  Upload   Total   Spent    Left  Speed', type: 'output', delay: 100 },
+            { text: '100  4588  100  4588    0     0   8921      0 --:--:-- --:--:-- --:--:--  8943', type: 'output', delay: 100 },
+            { text: '✓ OpenClaw installed successfully', type: 'success', delay: 500 },
+            { text: '', type: 'empty', delay: 300 },
+            { text: '# 查看版本', type: 'comment', delay: 300 },
+            { text: '$ openclaw --version', type: 'command', delay: 1500, typeEffect: true },
+            { text: 'OpenClaw version 1.2.0', type: 'output', delay: 300 },
+            { text: '', type: 'empty', delay: 300 },
+            { text: '# 配置 API 密钥', type: 'comment', delay: 300 },
+            { text: '$ vim ~/.openclaw/config.json', type: 'command', delay: 2000, typeEffect: true },
+            { text: '', type: 'empty', delay: 500 },
+            { text: '# 安装 MeetingMate Skill', type: 'comment', delay: 300 },
+            { text: '$ openclaw install kirk-haodong/meetingmate-ai', type: 'command', delay: 3000, typeEffect: true },
+            { text: '✓ Skill installed: meetingmate', type: 'success', delay: 500 },
+            { text: '', type: 'empty', delay: 300 },
+            { text: '# 处理会议录音', type: 'comment', delay: 300 },
+            { text: '$ openclaw run meetingmate --audio meeting.mp3', type: 'command', delay: 3500, typeEffect: true },
+            { text: '🎙️  正在转录会议...', type: 'output', delay: 800 },
+            { text: '📝  提取会议要点...', type: 'output', delay: 800 },
+            { text: '📋  识别待办任务...', type: 'output', delay: 800 },
+            { text: '⏰  设置自动提醒...', type: 'output', delay: 800 },
+            { text: '✓ 会议处理完成', type: 'success', delay: 500 },
+            { text: '', type: 'empty', delay: 300 },
+            { text: '# 查看生成的会议纪要', type: 'comment', delay: 300 },
+            { text: '$ cat meeting_output/summary.md', type: 'command', delay: 2000, typeEffect: true },
+            { text: '', type: 'empty', delay: 200 },
+            { text: '# 📅 产品周会 - 2026.03.19', type: 'output', delay: 200 },
+            { text: '', type: 'empty', delay: 100 },
+            { text: '## 🎯 会议要点', type: 'output', delay: 100 },
+            { text: '1. Q2产品路线图确定', type: 'output', delay: 100 },
+            { text: '2. 新功能需求讨论', type: 'output', delay: 100 },
+            { text: '', type: 'empty', delay: 100 },
+            { text: '## ✅ 待办任务', type: 'output', delay: 100 },
+            { text: '- [ ] 完成用户调研报告 (张三, 3-20)', type: 'output', delay: 100 },
+            { text: '- [ ] 设计新版首页原型 (李四, 3-22)', type: 'output', delay: 100 },
+            { text: '- [ ] 准备比赛演示材料 (王五, 3-25)', type: 'output', delay: 100 },
+        ];
+        
+        let currentLine = 0;
+        const contentDiv = document.getElementById('content');
+        
+        function typeText(element, text, speed = 30) {
+            return new Promise(resolve => {
+                let i = 0;
+                const timer = setInterval(() => {
+                    element.textContent += text[i];
+                    i++;
+                    if (i >= text.length) {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, speed);
+            });
+        }
+        
+        async function showLines() {
+            for (const line of lines) {
+                const div = document.createElement('div');
+                div.className = 'line ' + line.type;
+                div.style.animationDelay = '0s';
+                contentDiv.appendChild(div);
+                
+                if (line.type === 'empty') {
+                    div.innerHTML = '&nbsp;';
+                } else if (line.type === 'command') {
+                    div.innerHTML = '<span class="prompt">$ </span>';
+                    const span = document.createElement('span');
+                    span.className = 'command';
+                    div.appendChild(span);
+                    if (line.typeEffect) {
+                        await typeText(span, line.text.replace('$ ', ''), 30);
+                    } else {
+                        span.textContent = line.text.replace('$ ', '');
+                    }
+                } else {
+                    div.textContent = line.text;
+                }
+                
+                div.style.opacity = '1';
+                
+                await new Promise(r => setTimeout(r, line.delay));
+                
+                // 自动滚动到底部
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        }
+        
+        showLines();
+    </script>
+</body>
+</html>
