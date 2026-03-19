@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetingMate AI - 会议纪要</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            width: 1200px;
+            height: 800px;
+            overflow: hidden;
+        }
+        .app {
+            display: flex;
+            height: 100%;
+        }
+        .sidebar {
+            width: 240px;
+            background: #1e293b;
+            border-right: 1px solid #334155;
+            padding: 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .nav-item.active {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+        }
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow: hidden;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 28px; color: #fff; }
+        .btn {
+            padding: 10px 20px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .meeting-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+        .meeting-title h2 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .meeting-meta {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .meeting-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .section { margin-bottom: 24px; }
+        .section h3 {
+            font-size: 16px;
+            color: #60a5fa;
+            margin-bottom: 12px;
+        }
+        .section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .section li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        .section li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+        }
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            border-left: 3px solid #2563eb;
+        }
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #475569;
+            border-radius: 4px;
+        }
+        .task-content { flex: 1; }
+        .task-title { color: #fff; margin-bottom: 4px; }
+        .task-meta { color: #64748b; font-size: 12px; }
+        .task-assignee {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .task-deadline {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">🦞 MeetingMate</div>
+            <nav>
+                <div class="nav-item active">📋 会议纪要</div>
+                <div class="nav-item">✅ 任务列表</div>
+                <div class="nav-item">🔍 知识库</div>
+                <div class="nav-item">📊 效率分析</div>
+            </nav>
+        </aside>
+        <main class="main">
+            <div class="header">
+                <h1>会议纪要</h1>
+                <button class="btn">+ 新建会议</button>
+            </div>
+            
+            <div class="meeting-card">
+                <div class="meeting-header">
+                    <div class="meeting-title">
+                        <h2>📅 产品周会</h2>
+                        <div class="meeting-meta">2026年3月19日 · 14:00-15:00 · 参会：张三、李四、王五、赵六</div>
+                    </div>
+                    <span class="meeting-badge">✓ AI已生成</span>
+                </div>
+                
+                <div class="section">
+                    <h3>🎯 会议要点</h3>
+                    <ul>
+                        <li><strong>Q2产品路线图确定</strong> - 优先级：AI会议纪要优化 > 多平台集成 > 效率分析模块</li>
+                        <li><strong>新功能需求讨论</strong> - 用户反馈希望支持实时转录，计划Q2完成原型</li>
+                        <li><strong>市场推广策略</strong> - 参加中关村北纬龙虾大赛，目标种子用户100+</li>
+                    </ul>
+                </div>
+                
+                <div class="section">
+                    <h3>✅ 待办任务</h3>
+                    <div class="task-list">
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">完成用户调研报告</div>
+                                <div class="task-meta">来自：产品周会</div>
+                            </div>
+                            <span class="task-assignee">张三</span>
+                            <span class="task-deadline">明天</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">设计新版首页原型</div>
+                                <div class="task-meta">来自：产品周会</div>
+                            </div>
+                            <span class="task-assignee">李四</span>
+                            <span class="task-deadline">3月22日</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">准备比赛演示材料</div>
+                                <div class="task-meta">来自：产品周会</div>
+                            </div>
+                            <span class="task-assignee">王五</span>
+                            <span class="task-deadline">3月25日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetingMate AI - 转录界面</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            width: 1200px;
+            height: 800px;
+            overflow: hidden;
+        }
+        .app {
+            display: flex;
+            height: 100%;
+        }
+        .sidebar {
+            width: 240px;
+            background: #1e293b;
+            border-right: 1px solid #334155;
+            padding: 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow: hidden;
+        }
+        .header {
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 28px; color: #fff; margin-bottom: 10px; }
+        .meeting-info {
+            display: flex;
+            gap: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .waveform-container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .waveform-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .play-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #2563eb;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .time-display {
+            color: #94a3b8;
+            font-size: 14px;
+            font-family: monospace;
+        }
+        .waveform {
+            height: 80px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa, #3b82f6, #2563eb);
+            border-radius: 4px;
+            position: relative;
+        }
+        .transcript-container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .transcript-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+        .transcript-title {
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+        }
+        .accuracy-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .transcript-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .transcript-item {
+            display: flex;
+            gap: 16px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .transcript-item:hover {
+            background: rgba(255,255,255,0.03);
+        }
+        .timestamp {
+            color: #64748b;
+            font-size: 13px;
+            font-family: monospace;
+            min-width: 60px;
+        }
+        .speaker {
+            color: #60a5fa;
+            font-weight: 500;
+            min-width: 60px;
+        }
+        .text {
+            color: #e2e8f0;
+            line-height: 1.6;
+            flex: 1;
+        }
+        .highlight {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">🦞 MeetingMate</div>
+            <nav>
+                <div class="nav-item">📋 会议纪要</div>
+                <div class="nav-item">✅ 任务列表</div>
+                <div class="nav-item">🔍 知识库</div>
+                <div class="nav-item">📊 效率分析</div>
+            </nav>
+        </aside>
+        <main class="main">
+            <div class="header">
+                <h1>🎙️ 会议转录</h1>
+                <div class="meeting-info">
+                    <span>产品周会</span>
+                    <span>·</span>
+                    <span>2026年3月19日</span>
+                    <span>·</span>
+                    <span>时长: 45分钟</span>
+                    <span>·</span>
+                    <span style="color: #34d399;">✓ 转录完成</span>
+                </div>
+            </div>
+            
+            <div class="waveform-container">
+                <div class="waveform-header">
+                    <div class="audio-controls">
+                        <button class="play-btn">▶</button>
+                        <div class="time-display">00:00 / 45:23</div>
+                    </div>
+                    <div style="color: #64748b; font-size: 13px;">🎵 meeting_20260315.mp3</div>
+                </div>
+                <div class="waveform"></div>
+            </div>
+            
+            <div class="transcript-container">
+                <div class="transcript-header">
+                    <span class="transcript-title">转录文本</span>
+                    <span class="accuracy-badge">🎯 识别准确率 96.5%</span>
+                </div>
+                
+                <div class="transcript-content">
+                    <div class="transcript-item">
+                        <span class="timestamp">00:00</span>
+                        <span class="speaker">张三</span>
+                        <span class="text">大家好，今天的周会开始。我们先回顾下<span class="highlight">上周的进度</span>。</span>
+                    </div>
+                    
+                    <div class="transcript-item">
+                        <span class="timestamp">02:15</span>
+                        <span class="speaker">李四</span>
+                        <span class="text"><span class="highlight">用户调研</span>已经完成了80%，还有最后的报告需要整理。</span>
+                    </div>
+                    
+                    <div class="transcript-item">
+                        <span class="timestamp">03:30</span>
+                        <span class="speaker">张三</span>
+                        <span class="text">好的，李四你<span class="highlight">明天能完成报告吗</span>？</span>
+                    </div>
+                    
+                    <div class="transcript-item">
+                        <span class="timestamp">03:45</span>
+                        <span class="speaker">李四</span>
+                        <span class="text">没问题，<span class="highlight">明天下班前提交</span>。</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
