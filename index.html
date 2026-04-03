@@ -1120,13 +1120,13 @@
 <nav>
   <div class="nav-logo">SST<span>—</span>DevFlow AI</div>
   <ul class="nav-links">
-    <li><a href="#background">背景</a></li>
-    <li><a href="#harness-def">Harness 定义</a></li>
+    <li><a href="#background">为什么</a></li>
     <li><a href="#architecture">架构</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#mcp">MCP 工具</a></li>
+    <li><a href="#skills">功能</a></li>
+    <li><a href="#mcp">工具集</a></li>
     <li><a href="#roadmap">路线图</a></li>
     <li><a href="#install">安装</a></li>
+    <li><a href="#harness-def">技术原理</a></li>
   </ul>
   <span class="nav-badge">v1.1.0</span>
 </nav>
@@ -1139,15 +1139,15 @@
   <div class="hero-tag">CVTE System Software Team</div>
 
   <h1 class="hero-title">
-    缺陷 Debug<br>
-    <span class="accent">重新定义</span>
+    SST-DevFlow AI<br>
+    <span class="accent">让 AI 替你干杂活</span>
   </h1>
 
-  <div class="hero-subtitle-en">AI Workflow Automation for Embedded Engineers</div>
+  <div class="hero-subtitle-en">Bug 修复 · 代码合入 · Jira 流转 · 全程自动化</div>
 
   <p class="hero-desc">
-    基于 <strong>Harness Engineering</strong> 理念构建 —— 给 AI 搭建环境，让智能真正能用起来。<br>
-    从 Bug 分析到代码提交、Jira 流转，一条命令，全程自动化。
+    输入一句话，AI 自动完成：读 Jira → 分析代码 → 修复 → 提交 → 创建 MR → 流转状态。<br>
+    从此不再手动写 commit、填字段、切系统——<strong>专注在真正需要你的事情上</strong>。
   </p>
 
   <div class="hero-cta-row">
@@ -1178,15 +1178,15 @@
 <!-- BACKGROUND -->
 <section id="harness-def">
   <div class="section-header fade-in">
-    <div class="section-label">// 01 — Harness Definition</div>
-    <h2 class="section-title">什么是 Harness<span class="dim">？本项目如何对应？</span></h2>
+    <div class="section-label">// 技术原理</div>
+    <h2 class="section-title">SST-DevFlow AI 是怎么工作的<span class="dim">？底层架构</span></h2>
   </div>
 
   <!-- 公式说明 -->
   <div class="fade-in" style="padding: 0 80px; margin-bottom: 2px;">
     <div style="background: var(--bg-panel); padding: 40px 48px; border-left: 3px solid var(--orange); position: relative; overflow: hidden;">
       <div style="position: absolute; top: 16px; right: 24px; font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 700; color: rgba(255,107,0,0.06); user-select: none;">≡</div>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 16px;">来自 learn-claude-code 的定义</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 16px;">底层设计公式（Harness Engineering）</div>
       <div style="font-family: 'JetBrains Mono', monospace; font-size: clamp(16px, 2.5vw, 26px); font-weight: 700; color: var(--text); margin-bottom: 24px; letter-spacing: 0.02em;">
         Harness = <span style="color: var(--orange);">Tools</span> + <span style="color: var(--cyan);">Knowledge</span> + <span style="color: var(--green);">Observation</span> + <span style="color: var(--amber);">Action Interfaces</span> + <span style="color: #CC88FF;">Permissions</span>
       </div>
@@ -1204,8 +1204,8 @@
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--purple); text-transform: uppercase; margin-bottom: 16px;">Layered Architecture</div>
       <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">分层 Harness 架构 — 通用层 + 领域扩展层</div>
       <div style="font-size: 13px; color: var(--text-mid); line-height: 1.8; margin-bottom: 28px; max-width: 720px;">
-        <strong style="color: var(--text);">cvte-harness 不是独立的 Harness</strong>，而是<strong style="color: var(--purple);">基于 Claude Code 的领域特定扩展</strong>。
-        Claude Code 提供通用 AI 能力（文件操作、记忆、多 agent），cvte-harness 在其之上叠加 CVTE 系统软件工作流的专门化能力。
+        <strong style="color: var(--text);">SST-DevFlow AI 不是独立的 AI</strong>，而是<strong style="color: var(--purple);">基于 Claude Code 的领域特定扩展</strong>。
+        Claude Code 提供通用 AI 能力（文件操作、记忆、多 agent），SST-DevFlow AI 在其之上叠加 CVTE 系统软件工作流的专门化能力。
       </div>
 
       <!-- 两层架构对比 -->
@@ -1214,7 +1214,7 @@
         <!-- cvte-harness 层 -->
         <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--purple); padding: 28px 24px;">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--purple);">cvte-harness</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--purple);">SST-DevFlow AI</div>
             <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; background: rgba(204,136,255,0.12); color: var(--purple); padding: 2px 8px; letter-spacing: 0.1em;">领域特定扩展</div>
           </div>
           <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.6;">为 CVTE 系统软件工作流提供专门化能力：</div>
@@ -1463,7 +1463,7 @@
         <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 12px;">Evolution Loop</div>
         <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">自进化闭环 — 超越标准定义</div>
         <div style="font-size: 13px; color: var(--text-mid); line-height: 1.8; max-width: 520px;">
-          标准 Harness 是静态的；CVTE Harness 在此基础上增加了<strong style="color: var(--text);">自进化机制</strong>：
+          标准 Harness 是静态的；SST-DevFlow AI 在此基础上增加了<strong style="color: var(--text);">自进化机制</strong>：
           每次任务执行后自动评估 → 积累失败模式 → 每周分析 → 自动将 suggestions 写回 SKILL.md →
           下次执行时 Knowledge 更丰富。<strong style="color: var(--orange);">Harness 的能力随时间单调递增。</strong>
         </div>
@@ -1484,7 +1484,7 @@
 
 <section id="background">
   <div class="section-header fade-in">
-    <div class="section-label">// 02 — Context</div>
+    <div class="section-label">// 01 — Why</div>
     <h2 class="section-title">为什么需要 SST-DevFlow AI<span class="dim">？</span></h2>
   </div>
 
@@ -1584,7 +1584,7 @@
 <!-- ARCHITECTURE -->
 <section id="architecture">
   <div class="section-header fade-in">
-    <div class="section-label">// 03 — Architecture</div>
+    <div class="section-label">// 02 — Architecture</div>
     <h2 class="section-title">系统架构<span class="dim"> — 三层设计</span></h2>
   </div>
 
@@ -1669,7 +1669,7 @@
 <!-- SKILLS -->
 <section id="skills">
   <div class="section-header fade-in">
-    <div class="section-label">// 04 — Skills</div>
+    <div class="section-label">// 03 — Skills</div>
     <h2 class="section-title">5 个核心 Skills<span class="dim"> — 端到端自动化</span></h2>
   </div>
 
@@ -1793,7 +1793,7 @@
 <!-- MCP TOOLS -->
 <section id="mcp">
   <div class="section-header fade-in">
-    <div class="section-label">// 05 — MCP Tools</div>
+    <div class="section-label">// 04 — MCP Tools</div>
     <h2 class="section-title">15 个 MCP 工具<span class="dim"> — 深度系统集成</span></h2>
   </div>
 
@@ -1925,7 +1925,7 @@
 <!-- DUAL AI -->
 <section id="dual-ai">
   <div class="section-header fade-in">
-    <div class="section-label">// 06 — Dual AI</div>
+    <div class="section-label">// 05 — Dual AI</div>
     <h2 class="section-title">双 AI 协作<span class="dim"> — 执行 + 评估 + 进化</span></h2>
   </div>
 
@@ -1986,7 +1986,7 @@
 <!-- ROADMAP -->
 <section id="roadmap">
   <div class="section-header fade-in">
-    <div class="section-label">// 07 — Roadmap</div>
+    <div class="section-label">// 06 — Roadmap</div>
     <h2 class="section-title">路线图<span class="dim"> — 从基础到平台</span></h2>
   </div>
 
@@ -2046,7 +2046,7 @@
 <!-- INSTALL -->
 <section id="install">
   <div class="section-header fade-in">
-    <div class="section-label">// 08 — Get Started</div>
+    <div class="section-label">// 07 — Get Started</div>
     <h2 class="section-title">快速开始<span class="dim"> — 三步上手</span></h2>
   </div>
 
@@ -2144,7 +2144,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">CVTE—HARNESS</div>
+  <div class="footer-logo">SST—DevFlow AI</div>
   <div class="footer-credit">
     Based on Harness Engineering · Made with ❤ by CVTE System Software Team · v1.1.0
   </div>
