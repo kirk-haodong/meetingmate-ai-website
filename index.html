@@ -1,596 +1,2225 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeetingMate AI - 会议记录从30分钟到2分钟</title>
-    <link rel="stylesheet" href="static/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVTE Harness — AI 工作流自动化系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B00;
+    --orange-dim: #CC5500;
+    --amber: #FFB300;
+    --bg: #0A0A0A;
+    --bg-card: #111111;
+    --bg-panel: #161616;
+    --border: #222222;
+    --border-active: #FF6B00;
+    --text: #E8E8E8;
+    --text-dim: #666666;
+    --text-mid: #999999;
+    --green: #00D46A;
+    --cyan: #00C8FF;
+    --red: #FF3B3B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── SCANLINE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      rgba(0,0,0,0.08) 3px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    color: var(--orange);
+  }
+
+  .nav-logo span { color: var(--text-dim); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    color: var(--text-dim);
+    transition: color 0.2s;
+    text-transform: uppercase;
+  }
+
+  .nav-links a:hover { color: var(--orange); }
+
+  .nav-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: var(--orange);
+    color: #000;
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── SECTIONS ── */
+  section { position: relative; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 80px 80px;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,107,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,107,0,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,107,0,0.12) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--orange);
+  }
+
+  .hero-title {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 900;
+    font-size: clamp(52px, 7vw, 96px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .hero-title .accent { color: var(--orange); }
+
+  .hero-subtitle-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(14px, 2vw, 20px);
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    margin-bottom: 32px;
+  }
+
+  .hero-desc {
+    max-width: 580px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-mid);
+    margin-bottom: 48px;
+  }
+
+  .hero-desc strong { color: var(--text); }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--orange);
+    color: #000;
+    border: none;
+    padding: 14px 28px;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { background: var(--amber); transform: translateY(-1px); }
+
+  .btn-ghost {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 13px 28px;
+    cursor: pointer;
+    font-weight: 400;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+
+  .hero-stats {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 20px 28px;
+    min-width: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--orange);
+  }
+
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    padding: 80px 80px 0;
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .section-title .dim { color: var(--text-dim); }
+
+  /* ── BACKGROUND SECTION ── */
+  #background {
+    padding: 0 80px 80px;
+  }
+
+  .bg-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 0;
+  }
+
+  .bg-panel {
+    background: var(--bg-panel);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bg-panel-large {
+    grid-row: span 2;
+  }
+
+  .panel-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 64px;
+    font-weight: 700;
+    color: rgba(255,107,0,0.08);
+    line-height: 1;
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    user-select: none;
+  }
+
+  .panel-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+
+  .panel-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .panel-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-mid);
+  }
+
+  .panel-body strong { color: var(--text); }
+
+  /* ── PROCESS FLOW ── */
+  #process {
+    padding: 0 80px 80px;
+  }
+
+  .process-track {
+    background: var(--bg-panel);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .process-label-row {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .flow-stages {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  .stage {
+    flex: 1;
+    position: relative;
+  }
+
+  .stage-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    cursor: default;
+    transition: border-color 0.3s;
+  }
+
+  .stage-box:hover { border-color: var(--orange); }
+
+  .stage-box.highlighted {
+    border-color: var(--orange);
+    background: rgba(255,107,0,0.05);
+  }
+
+  .stage-box.highlighted .stage-name { color: var(--orange); }
+
+  .stage-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .stage-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .stage-arrow {
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--border);
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .stage-arrow.active { color: var(--orange); }
+
+  .flow-annotation {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(255,107,0,0.06);
+    border-left: 3px solid var(--orange);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-mid);
+  }
+
+  .flow-annotation strong { color: var(--orange); }
+
+  .ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    background: var(--orange);
+    color: #000;
+    padding: 3px 8px;
+    font-weight: 700;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── ARCHITECTURE ── */
+  #architecture {
+    padding: 0 80px 80px;
+  }
+
+  .arch-canvas {
+    background: var(--bg-panel);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .arch-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .arch-layer {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .arch-layer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    padding: 12px 8px;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    align-items: center;
+    min-width: 32px;
+    width: 32px;
+    flex-shrink: 0;
+  }
+
+  .arch-blocks {
+    flex: 1;
+    display: flex;
+    gap: 2px;
+  }
+
+  .arch-block {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 20px 16px;
+    position: relative;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+
+  .arch-block:hover {
+    border-color: var(--orange);
+    background: rgba(255,107,0,0.04);
+  }
+
+  .arch-block-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  .arch-block-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .arch-block-tools {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .tool-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    background: rgba(255,107,0,0.1);
+    color: var(--orange);
+    letter-spacing: 0.05em;
+  }
+
+  .arch-connector {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .arch-connector::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .arch-connector-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── SKILLS ── */
+  #skills {
+    padding: 0 80px 80px;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .skill-card {
+    background: var(--bg-panel);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background 0.3s;
+  }
+
+  .skill-card:hover { background: #1A1A1A; }
+
+  .skill-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--orange), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .skill-card:hover::after { opacity: 1; }
+
+  .skill-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .skill-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--orange);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+
+  .skill-meta { flex: 1; }
+
+  .skill-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .skill-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--green);
+    text-transform: uppercase;
+  }
+
+  .skill-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .skill-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.02);
+    border-left: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .skill-card:hover .flow-step { border-left-color: rgba(255,107,0,0.3); }
+
+  .flow-step .step-num {
+    color: var(--orange);
+    min-width: 20px;
+    font-weight: 600;
+  }
+
+  .branch-badge {
+    margin-left: auto;
+    font-size: 9px;
+    background: rgba(255,107,0,0.15);
+    color: var(--orange);
+    padding: 2px 6px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── MCP TOOLS ── */
+  #mcp {
+    padding: 0 80px 80px;
+  }
+
+  .mcp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .mcp-group {
+    background: var(--bg-panel);
+    padding: 32px;
+  }
+
+  .mcp-group-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mcp-group-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+  }
+
+  .mcp-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+
+  .mcp-group-count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .mcp-tool-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .mcp-tool {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+    cursor: default;
+  }
+
+  .mcp-tool:hover { border-color: var(--border); }
+
+  .mcp-tool-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    flex: 1;
+  }
+
+  .mcp-tool-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* ── DUAL AI ── */
+  #dual-ai {
+    padding: 0 80px 80px;
+  }
+
+  .dual-ai-canvas {
+    background: var(--bg-panel);
+    padding: 48px;
+    position: relative;
+  }
+
+  .dual-ai-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 0;
+    align-items: center;
+  }
+
+  .ai-node {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .ai-node-highlight { border-color: var(--orange); }
+
+  .ai-node-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .ai-node-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .ai-node-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .ai-node-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+  }
+
+  .ai-node-item {
+    font-size: 11px;
+    color: var(--text-dim);
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .ai-node-item::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--orange);
+  }
+
+  .ai-arrow {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ai-arrow-line {
+    width: 48px;
+    height: 1px;
+    background: var(--orange);
+    position: relative;
+  }
+
+  .ai-arrow-line::after {
+    content: '▶';
+    position: absolute;
+    right: -8px;
+    top: -6px;
+    color: var(--orange);
+    font-size: 10px;
+  }
+
+  .ai-arrow-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  /* ── ROADMAP ── */
+  #roadmap {
+    padding: 0 80px 80px;
+  }
+
+  .roadmap-track {
+    background: var(--bg-panel);
+    padding: 48px;
+  }
+
+  .roadmap-timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .roadmap-timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--orange), transparent);
+  }
+
+  .roadmap-item {
+    position: relative;
+    margin-bottom: 40px;
+    padding-left: 28px;
+  }
+
+  .roadmap-item:last-child { margin-bottom: 0; }
+
+  .roadmap-dot {
+    position: absolute;
+    left: -29px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--orange);
+    background: var(--bg);
+    border-radius: 50%;
+  }
+
+  .roadmap-dot.active { background: var(--orange); }
+
+  .roadmap-phase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .roadmap-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .roadmap-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  .roadmap-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .roadmap-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .roadmap-tag.done {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .roadmap-tag.wip {
+    border-color: var(--orange);
+    color: var(--orange);
+  }
+
+  /* ── INSTALL ── */
+  #install {
+    padding: 0 80px 80px;
+  }
+
+  .install-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .install-panel {
+    background: var(--bg-panel);
+    padding: 40px;
+  }
+
+  .code-block {
+    background: #0D0D0D;
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .code-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--orange), transparent 60%);
+  }
+
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .code-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .code-dot-r { background: var(--red); }
+  .code-dot-y { background: var(--amber); }
+  .code-dot-g { background: var(--green); }
+
+  .code-block-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+
+  .code-comment { color: #555; }
+  .code-cmd { color: var(--amber); }
+  .code-str { color: var(--green); }
+  .code-key { color: var(--orange); }
+  .code-prompt { color: var(--text-dim); user-select: none; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+  }
+
+  .footer-credit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    #hero { padding: 100px 32px 60px; }
+    .hero-stats { display: none; }
+    .section-header { padding: 60px 32px 0; }
+    #background, #harness-def, #process, #architecture, #skills, #mcp, #dual-ai, #roadmap, #install { padding: 0 32px 60px; }
+    .bg-layout { grid-template-columns: 1fr; }
+    .bg-panel-large { grid-row: span 1; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .mcp-grid { grid-template-columns: 1fr; }
+    .install-layout { grid-template-columns: 1fr; }
+    .dual-ai-grid { grid-template-columns: 1fr; }
+    .ai-arrow { display: none; }
+    footer { padding: 32px; flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <span class="logo">🦞</span>
-                <span class="brand-name">MeetingMate AI</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#problem">痛点</a></li>
-                <li><a href="#solution">方案</a></li>
-                <li><a href="#features">功能</a></li>
-                <li><a href="#guide">使用</a></li>
-                <li><a href="#contact">联系</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <!-- Hero 区域 -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="badge">🦞 基于 OpenClaw 智能体框架</div>
-                <h1>会议记录，从30分钟到2分钟</h1>
-                <p class="hero-desc">AI自动转录会议、提取任务、跟踪进度<br>让团队专注于真正重要的工作</p>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">93%</span>
-                        <span class="stat-label">记录时间减少</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">88%</span>
-                        <span class="stat-label">任务遗漏减少</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">42%</span>
-                        <span class="stat-label">完成率提升</span>
-                    </div>
-                </div>
-                <div class="hero-cta">
-                    <a href="#solution" class="btn btn-primary">查看方案详情</a>
-                    <a href="https://github.com/kirk-haodong/meetingmate-ai" class="btn btn-secondary">GitHub 仓库</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="product-preview">
-                    <div class="preview-header">
-                        <span class="preview-dot red"></span>
-                        <span class="preview-dot yellow"></span>
-                        <span class="preview-dot green"></span>
-                        <span class="preview-title">MeetingMate AI - 智能会议助手</span>
-                    </div>
-                    <div class="preview-body">
-                        <div class="preview-sidebar">
-                            <div class="preview-nav active">📋 会议纪要</div>
-                            <div class="preview-nav">✅ 任务列表</div>
-                            <div class="preview-nav">🔍 知识库</div>
-                            <div class="preview-nav">⏰ 自动提醒</div>
-                            <div class="preview-nav">📊 效率分析</div>
-                        </div>
-                        <div class="preview-content">
-                            <div class="preview-meeting">
-                                <h4>📅 产品周会 - 2026.03.15</h4>
-                                <div class="preview-meta">参会：张三、李四、王五 | 时长：45分钟</div>
-                                <div class="preview-section">
-                                    <h5>🎯 会议要点</h5>
-                                    <ul>
-                                        <li>确定Q2产品路线图</li>
-                                        <li>讨论新功能优先级</li>
-                                    </ul>
-                                </div>
-                                <div class="preview-section">
-                                    <h5>✅ 待办任务</h5>
-                                    <div class="preview-task">
-                                        <span class="task-check">☐</span>
-                                        <span class="task-text">完成用户调研报告</span>
-                                        <span class="task-assign">张三</span>
-                                        <span class="task-date">3-20</span>
-                                    </div>
-                                    <div class="preview-task">
-                                        <span class="task-check">☐</span>
-                                        <span class="task-text">设计新版首页原型</span>
-                                        <span class="task-assign">李四</span>
-                                        <span class="task-date">3-22</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CVTE<span>—</span>HARNESS</div>
+  <ul class="nav-links">
+    <li><a href="#background">背景</a></li>
+    <li><a href="#harness-def">Harness 定义</a></li>
+    <li><a href="#architecture">架构</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#mcp">MCP 工具</a></li>
+    <li><a href="#roadmap">路线图</a></li>
+    <li><a href="#install">安装</a></li>
+  </ul>
+  <span class="nav-badge">v1.1.0</span>
+</nav>
 
-    <!-- 问题痛点区域 -->
-    <section id="problem" class="problem-scenario">
-        <div class="container">
-            <h2 class="section-title">这些场景，你是否熟悉？</h2>
-            <p class="section-subtitle">中国职场人每周开会6.5小时，其中40%被认为是无效会议</p>
-            <div class="problem-grid">
-                <div class="problem-card">
-                    <div class="problem-icon">😫</div>
-                    <h3>会议结束，整理记录30分钟</h3>
-                    <p>一场1小时的会议，会后整理纪要、提炼要点、分配任务，平均需要30分钟</p>
-                    <div class="problem-data">每周浪费4小时在记录上</div>
-                </div>
-                <div class="problem-card">
-                    <div class="problem-icon">😰</div>
-                    <h3>任务分配，总有人忘记做</h3>
-                    <p>会上分配了10个任务，月底复盘发现漏了2个，项目进度因此延误</p>
-                    <div class="problem-data">25%的任务会被遗漏</div>
-                </div>
-                <div class="problem-card">
-                    <div class="problem-icon">🔍</div>
-                    <h3>历史决策，翻遍聊天记录</h3>
-                    <p>想找3个月前的决策依据，翻遍微信、钉钉、邮件，就是找不到</p>
-                    <div class="problem-data">平均查找时间30分钟+</div>
-                </div>
-            </div>
-            <div class="problem-summary">
-                <p><strong>10人团队每年浪费1300小时在会议记录上</strong></p>
-                <p>相当于一个人半年的工作时间</p>
-            </div>
-        </div>
-    </section>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
 
-    <!-- 解决方案总览 -->
-    <section id="solution" class="solution-overview">
-        <div class="container">
-            <h2 class="section-title">MeetingMate AI 帮你一次性解决</h2>
-            <p class="section-subtitle">首个实现「会议→任务→跟踪」全流程自动化的智能助手</p>
-            
-            <!-- 产品全景截图 -->
-            <div class="solution-showcase">
-                <iframe src="static/images/screenshots/01_meeting_notes.html" 
-                        style="width: 100%; height: 550px; border: none; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);"
-                        title="MeetingMate AI 会议纪要界面"></iframe>
-            </div>
-            
-            <!-- 4步流程 -->
-            <div class="workflow">
-                <h3>🔄 全流程自动化管理</h3>
-                <p style="text-align: center; color: #94a3b8; margin-bottom: 30px;">
-                    OpenClaw 可部署在任意设备，无需人工干预，会议结束后自动完成全部流程
-                </p>
-                
-                <div class="workflow-steps">
-                    <div class="workflow-step">
-                        <div class="step-icon">🎙️</div>
-                        <h4>智能录音采集</h4>
-                        <p style="font-size: 12px; color: #64748b;">
-                            💻 Windows/Mac 会议软件<br>
-                            📱 手机会议 App<br>
-                            📺 会议平板/电视<br>
-                            🎤 智能音箱
-                        </p>
-                        <span class="step-time">OpenClaw 常驻后台</span>
-                    </div>
-                    <div class="workflow-arrow">→</div>
-                    
-                    <div class="workflow-step">
-                        <div class="step-icon">🤖</div>
-                        <h4>AI 自动处理</h4>
-                        <p style="font-size: 12px; color: #64748b;">
-                            📝 语音转文字<br>
-                            🎯 提取会议要点<br>
-                            📋 识别待办任务<br>
-                            👤 匹配负责人
-                        </p>
-                        <span class="step-time">无需人工操作</span>
-                    </div>
-                    
-                    <div class="workflow-arrow">→</div>
-                    
-                    <div class="workflow-step">
-                        <div class="step-icon">📤</div>
-                        <h4>智能推送</h4>
-                        <p style="font-size: 12px; color: #64748b;">
-                            📧 邮件推送纪要<br>
-                            💬 飞书/钉钉/企微<br>
-                            📱 App 消息通知<br>
-                            🗄️ 知识库归档
-                        </p>
-                        <span class="step-time">实时送达</span>
-                    </div>
-                    
-                    <div class="workflow-arrow">→</div>
-                    
-                    <div class="workflow-step">
-                        <div class="step-icon">⏰</div>
-                        <h4>自动跟踪提醒</h4>
-                        <p style="font-size: 12px; color: #64748b;">
-                            ⏰ 到期前 1天提醒<br>
-                            🔔 逾期自动升级<br>
-                            📊 进度实时同步<br>
-                            ✅ 完成自动归档
-                        </p>
-                        <span class="step-time">全程自动化</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="hero-tag">CVTE System Software Team</div>
 
-    <!-- 核心功能 -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2 class="section-title">五大核心功能</h2>
-            
-            <!-- 功能1 -->
-            <div class="feature-detail">
-                <div class="feature-screenshot">
-                    <iframe src="static/images/screenshots/03_transcript.html" 
-                            style="width: 100%; height: 500px; border: none; border-radius: 8px; "
-                            title="转录界面"></iframe>
-                </div>
-                <div class="feature-info">
-                    <div class="feature-icon-large">🎙️</div>
-                    <h3>会议智能转录</h3>
-                    <p class="feature-desc">自动将会议录音转换为文字，AI提取关键要点、决策事项、待办任务，生成标准化会议纪要</p>
-                    <ul class="feature-points">
-                        <li>✓ 语音识别准确率 > 95%</li>
-                        <li>✓ 自动提取会议要点、决策事项</li>
-                        <li>✓ 生成Markdown格式会议纪要</li>
-                    </ul>
-                    <div class="feature-effect">
-                        <span class="effect-label">效果</span>
-                        <span class="effect-value">30分钟会议 → 2分钟生成纪要</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 功能2 -->
-            <div class="feature-detail reverse">
-                <div class="feature-info">
-                    <div class="feature-icon-large">📋</div>
-                    <h3>任务自动提取</h3>
-                    <p class="feature-desc">从会议内容智能识别待办事项，自动匹配负责人和截止日期，确保每个承诺都被记录</p>
-                    <ul class="feature-points">
-                        <li>✓ 自动理解上下文，识别任务归属</li>
-                        <li>✓ 智能匹配负责人和截止日期</li>
-                        <li>✓ 支持人工确认和调整</li>
-                    </ul>
-                    <div class="feature-effect">
-                        <span class="effect-label">效果</span>
-                        <span class="effect-value">自动提取90%以上会议任务</span>
-                    </div>
-                </div>
-                <div class="feature-screenshot">
-                    <iframe src="static/images/screenshots/02_task_list.html" 
-                            style="width: 100%; height: 500px; border: none; border-radius: 8px; "
-                            title="任务列表界面"></iframe>
-                </div>
-            </div>
-            
-            <!-- 功能3 -->
-            <div class="feature-detail">
-                <div class="feature-screenshot">
-                    <iframe src="static/images/screenshots/04_search.html" 
-                            style="width: 100%; height: 500px; border: none; border-radius: 8px; "
-                            title="搜索界面"></iframe>
-                </div>
-                <div class="feature-info">
-                    <div class="feature-icon-large">🔍</div>
-                    <h3>会议知识库</h3>
-                    <p class="feature-desc">历史会议纪要自动归档，支持自然语言查询，快速找到相关决策，企业知识不再流失</p>
-                    <ul class="feature-points">
-                        <li>✓ 自动归档与智能标签分类</li>
-                        <li>✓ 支持自然语言语义检索</li>
-                        <li>✓ 秒速定位历史决策</li>
-                    </ul>
-                    <div class="feature-effect">
-                        <span class="effect-label">效果</span>
-                        <span class="effect-value">历史信息检索从30分钟缩短至30秒</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 功能4 -->
-            <div class="feature-detail reverse">
-                <div class="feature-info">
-                    <div class="feature-icon-large">⏰</div>
-                    <h3>自动提醒跟踪</h3>
-                    <p class="feature-desc">根据截止日期自动发送提醒，支持多通道通知，实时跟踪任务进度，让到期不再遗漏</p>
-                    
-                    <div class="notification-channels">
-                        <h4 style="color: #60a5fa; font-size: 14px; margin-bottom: 12px;">📱 支持的通知渠道</h4>
-                        <div class="channel-grid">
-                            <div class="channel-item">
-                                <span class="channel-icon">📧</span>
-                                <span class="channel-name">邮件</span>
-                                <span class="channel-desc">发送会议纪要和待办清单</span>
-                            </div>
-                            <div class="channel-item">
-                                <span class="channel-icon">💬</span>
-                                <span class="channel-name">飞书</span>
-                                <span class="channel-desc">群聊Bot推送+个人消息</span>
-                            </div>
-                            <div class="channel-item">
-                                <span class="channel-icon">🔔</span>
-                                <span class="channel-name">钉钉</span>
-                                <span class="channel-desc">工作通知+待办提醒</span>
-                            </div>
-                            <div class="channel-item">
-                                <span class="channel-icon">💼</span>
-                                <span class="channel-name">企业微信</span>
-                                <span class="channel-desc">应用消息+日程同步</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <ul class="feature-points" style="margin-top: 20px;">
-                        <li>✓ <strong>会前</strong>：会议开始前5分钟，自动提醒参会人员</li>
-                        <li>✓ <strong>会后</strong>：会议结束5分钟内，自动发送纪要给全员</li>
-                        <li>✓ <strong>任务到期前</strong>：提前1天/4小时/1小时，多渠道提醒负责人</li>
-                        <li>✓ <strong>逾期升级</strong>：任务逾期自动抄送上级，确保闭环</li>
-                    </ul>
-                    
-                    <div class="feature-effect">
-                        <span class="effect-label">效果</span>
-                        <span class="effect-value">任务按时完成率提升40%，遗漏减少90%</span>
-                    </div>
-                </div>
-                <div class="feature-screenshot">
-                    <iframe src="static/images/screenshots/06_reminder.html" 
-                            style="width: 100%; height: 500px; border: none; border-radius: 8px; "
-                            title="提醒界面"></iframe>
-                </div>
-            </div>
-            
-            <!-- 功能5 -->
-            <div class="feature-detail">
-                <div class="feature-screenshot">
-                    <iframe src="static/images/screenshots/05_analytics.html" 
-                            style="width: 100%; height: 500px; border: none; border-radius: 8px; "
-                            title="分析界面"></iframe>
-                </div>
-                <div class="feature-info">
-                    <div class="feature-icon-large">📊</div>
-                    <h3>效率分析</h3>
-                    <p class="feature-desc">分析会议频率、时长、参与人数，AI分析效率指标，提供优化建议，帮你减少无效会议</p>
-                    <ul class="feature-points">
-                        <li>✓ 会议数据统计与可视化</li>
-                        <li>✓ AI分析效率指标</li>
-                        <li>✓ 生成周/月度效率报告</li>
-                    </ul>
-                    <div class="feature-effect">
-                        <span class="effect-label">效果</span>
-                        <span class="effect-value">帮助团队减少无效会议20%，提升效率30%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <h1 class="hero-title">
+    缺陷 Debug<br>
+    <span class="accent">重新定义</span>
+  </h1>
 
-    <!-- 效果对比 -->
-    <section class="comparison">
-        <div class="container">
-            <h2 class="section-title">量化效果，数据说话</h2>
-            <div class="comparison-content">
-                <div class="comparison-table-wrapper">
-                    <table class="comparison-table">
-                        <thead>
-                            <tr>
-                                <th>指标</th>
-                                <th>使用前</th>
-                                <th>使用后</th>
-                                <th>提升</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>会议记录时间</td>
-                                <td>30 分钟</td>
-                                <td>2 分钟</td>
-                                <td class="improvement down">↓ 93%</td>
-                            </tr>
-                            <tr>
-                                <td>任务遗漏率</td>
-                                <td>25%</td>
-                                <td>3%</td>
-                                <td class="improvement down">↓ 88%</td>
-                            </tr>
-                            <tr>
-                                <td>任务按时完成率</td>
-                                <td>60%</td>
-                                <td>85%</td>
-                                <td class="improvement up">↑ 42%</td>
-                            </tr>
-                            <tr>
-                                <td>信息检索时间</td>
-                                <td>30 分钟</td>
-                                <td>30 秒</td>
-                                <td class="improvement down">↓ 98%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- ROI计算 -->
-                <div class="roi-calculator">
-                    <h3>💰 ROI计算</h3>
-                    <div class="roi-content">
-                        <p class="roi-scenario">10人团队，每周5次会议，每年节省：</p>
-                        <div class="roi-formula">
-                            <span class="formula-part">(30分钟 - 2分钟)</span>
-                            <span class="formula-op">×</span>
-                            <span class="formula-part">5次</span>
-                            <span class="formula-op">×</span>
-                            <span class="formula-part">52周</span>
-                            <span class="formula-op">×</span>
-                            <span class="formula-part">10人</span>
-                            <span class="formula-equals">=</span>
-                            <span class="formula-result">1,213小时</span>
-                        </div>
-                        <p class="roi-conclusion">按人均时薪100元计算，<strong>年节省：121,300元</strong></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="hero-subtitle-en">AI Workflow Automation for Embedded Engineers</div>
 
-    <!-- 技术架构 -->
-    <section class="tech">
-        <div class="container">
-            <h2 class="section-title">基于 OpenClaw 智能体框架</h2>
-            <p class="section-subtitle">🤖 AI智能处理核心，一个指令，多Skill协同工作</p>
-            
-            <div class="tech-stack">
-                <div class="tech-layer">
-                    <h4>输入层</h4>
-                    <div class="tech-items">
-                        <span class="tech-item">🎙️ 会议录音</span>
-                        <span class="tech-item">💬 即时通讯</span>
-                        <span class="tech-item">📧 邮件系统</span>
-                    </div>
-                </div>
-                
-                <div class="tech-arrow">↓</div>
-                
-                <div class="tech-layer core">
-                    <h4>🤖 AI智能处理核心</h4>
-                    <p class="tech-desc">基于 OpenClaw 智能体框架，像乐高积木一样灵活组合各项能力</p>
-                    <div class="tech-skills">
-                        <div class="skill-box">
-                            <span class="skill-name">meeting-transcriber</span>
-                            <span class="skill-desc">语音识别</span>
-                        </div>
-                        <div class="skill-box">
-                            <span class="skill-name">task-extractor</span>
-                            <span class="skill-desc">任务提取</span>
-                        </div>
-                        <div class="skill-box">
-                            <span class="skill-name">reminder-scheduler</span>
-                            <span class="skill-desc">提醒调度</span>
-                        </div>
-                        <div class="skill-box">
-                            <span class="skill-name">meeting-search</span>
-                            <span class="skill-desc">知识检索</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tech-arrow">↓</div>
-                
-                <div class="tech-layer">
-                    <h4>数据层</h4>
-                    <div class="tech-items">
-                        <span class="tech-item">📝 会议纪要存储</span>
-                        <span class="tech-item">🗄️ 任务数据库</span>
-                        <span class="tech-item">🔍 智能知识库</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="tech-advantages">
-                <h3>为什么选择 OpenClaw？</h3>
-                <div class="advantages-grid">
-                    <div class="advantage-item">
-                        <span class="advantage-icon">✓</span>
-                        <span>内置定时任务，一行配置搞定</span>
-                    </div>
-                    <div class="advantage-item">
-                        <span class="advantage-icon">✓</span>
-                        <span>原生支持多通道通知（邮件/微信/钉钉/飞书）</span>
-                    </div>
-                    <div class="advantage-item">
-                        <span class="advantage-icon">✓</span>
-                        <span>数据本地存储，安全可控，支持私有化部署</span>
-                    </div>
-                    <div class="advantage-item">
-                        <span class="advantage-icon">✓</span>
-                        <span>模块化设计，像乐高一样灵活扩展</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <p class="hero-desc">
+    基于 <strong>Harness Engineering</strong> 理念构建 —— 给 AI 搭建环境，让智能真正能用起来。<br>
+    从 Bug 分析到代码提交、Jira 流转，一条命令，全程自动化。
+  </p>
 
-    <!-- 使用指南 -->
-    <section id="guide" class="usage-guide">
-        <div class="container">
-            <h2 class="section-title">3步开始使用</h2>
-            <p class="section-subtitle">零配置，开箱即用</p>
-            
-            <div class="guide-steps">
-                <div class="guide-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>安装 OpenClaw</h3>
-                        <p>根据你的操作系统选择安装方式：</p>
-                        <div class="code-block">
-                            <code># macOS / Linux</code><br>
-                            <code>curl -fsSL https://openclaw.ai/install.sh | bash</code>
-                        </div>
-                        <div class="code-block">
-                            <code># Windows (PowerShell)</code><br>
-                            <code>iwr -useb https://openclaw.ai/install.ps1 | iex</code>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="guide-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>配置 API 密钥</h3>
-                        <p>在 <code>~/.openclaw/config.json</code> 中配置：</p>
-                        <ul>
-                            <li>Whisper API 密钥（语音识别）</li>
-                            <li>MiniMax / OpenAI API 密钥（文本生成）</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="guide-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>安装并运行 Skill</h3>
-                        <p>方式一：通过 Git 克隆安装</p>
-                        <div class="code-block">
-                            <code>git clone https://github.com/kirk-haodong/meetingmate-ai.git</code><br>
-                            <code>cd meetingmate-ai</code><br>
-                            <code>pip install -r requirements.txt</code><br>
-                            <code>python scripts/meetingmate_workflow.py --process-meeting</code>
-                        </div>
-                        <p style="margin-top: 15px;">方式二：通过 OpenClaw 对话安装</p>
-                        <div class="code-block">
-                            <code>帮我安装并运行这个 skill: kirk-haodong/meetingmate-ai</code>
-                        </div>
-                        <p class="step-result">安装完成后，系统将自动监听会议录音，AI 自动转录、提取任务、发送提醒</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="hero-cta-row">
+    <a href="#install" class="btn-primary">立即安装</a>
+    <a href="#architecture" class="btn-ghost">查看架构</a>
+  </div>
 
-    <!-- 页脚 -->
-    <footer id="contact" class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <span class="logo">🦞</span>
-                    <span class="brand-name">MeetingMate AI</span>
-                    <p>会议记录，从30分钟到2分钟<br>让每一次会议都产生价值</p>
-                </div>
-                <div class="footer-links">
-                    <h4>项目链接</h4>
-                    <ul>
-                        <li><a href="https://github.com/kirk-haodong/meetingmate-ai">GitHub 仓库</a></li>
-                        <li><a href="#">技术文档</a></li>
-                        <li><a href="#guide">使用指南</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h4>联系我们</h4>
-                    <p>📧 13128614087@163.com</p>
-                    <p>🌐 clawmate.cloud</p>
-                    <p>🦞 Powered by OpenClaw</p>
-                    <p>© 2026 MeetingMate AI</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-num">5</div>
+      <div class="stat-label">核心 Skills</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">15</div>
+      <div class="stat-label">MCP 工具</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">4</div>
+      <div class="stat-label">维度评估</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">自进化周期</div>
+    </div>
+  </div>
+</section>
 
-    <script src="static/js/main.js"></script>
+<!-- BACKGROUND -->
+<section id="harness-def">
+  <div class="section-header fade-in">
+    <div class="section-label">// 01 — Harness Definition</div>
+    <h2 class="section-title">什么是 Harness<span class="dim">？本项目如何对应？</span></h2>
+  </div>
+
+  <!-- 公式说明 -->
+  <div class="fade-in" style="padding: 0 80px; margin-bottom: 2px;">
+    <div style="background: var(--bg-panel); padding: 40px 48px; border-left: 3px solid var(--orange); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 16px; right: 24px; font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 700; color: rgba(255,107,0,0.06); user-select: none;">≡</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 16px;">来自 learn-claude-code 的定义</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: clamp(16px, 2.5vw, 26px); font-weight: 700; color: var(--text); margin-bottom: 24px; letter-spacing: 0.02em;">
+        Harness = <span style="color: var(--orange);">Tools</span> + <span style="color: var(--cyan);">Knowledge</span> + <span style="color: var(--green);">Observation</span> + <span style="color: var(--amber);">Action Interfaces</span> + <span style="color: #CC88FF;">Permissions</span>
+      </div>
+      <div style="font-size: 14px; line-height: 1.9; color: var(--text-mid); max-width: 780px;">
+        <strong style="color: var(--text);">核心洞察</strong>：工程师的真正工作不是构建 Agent 本身（那是模型训练的事），而是构建让模型能在特定领域有效运作的 <strong style="color: var(--orange);">Harness</strong>。
+        正如 DeepMind 训练 DQN 玩 Atari，游戏环境本身就是 Harness —— 它提供了状态感知、动作接口、奖励信号。<br><br>
+        Harness 不是 prompt 链，不是脆弱的规则树。它是<strong style="color: var(--text);">一套结构化的工程环境</strong>，让模型的智能真正能够落地。
+      </div>
+    </div>
+  </div>
+
+  <!-- 分层架构 -->
+  <div class="fade-in" style="padding: 0 80px; margin-bottom: 2px;">
+    <div style="background: var(--bg-panel); padding: 36px 48px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--purple); text-transform: uppercase; margin-bottom: 16px;">Layered Architecture</div>
+      <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">分层 Harness 架构 — 通用层 + 领域扩展层</div>
+      <div style="font-size: 13px; color: var(--text-mid); line-height: 1.8; margin-bottom: 28px; max-width: 720px;">
+        <strong style="color: var(--text);">cvte-harness 不是独立的 Harness</strong>，而是<strong style="color: var(--purple);">基于 Claude Code 的领域特定扩展</strong>。
+        Claude Code 提供通用 AI 能力（文件操作、记忆、多 agent），cvte-harness 在其之上叠加 CVTE 系统软件工作流的专门化能力。
+      </div>
+
+      <!-- 两层架构对比 -->
+      <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 2px; align-items: stretch;">
+
+        <!-- cvte-harness 层 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--purple); padding: 28px 24px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--purple);">cvte-harness</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; background: rgba(204,136,255,0.12); color: var(--purple); padding: 2px 8px; letter-spacing: 0.1em;">领域特定扩展</div>
+          </div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.6;">为 CVTE 系统软件工作流提供专门化能力：</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); flex-shrink: 0; width: 80px;">Tools</div>
+              <div style="font-size: 11px; color: var(--text-mid);">Jira/GitLab/Git 集成</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); flex-shrink: 0; width: 80px;">Knowledge</div>
+              <div style="font-size: 11px; color: var(--text-mid);">CVTE 规范（CLAUDE.md）</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); flex-shrink: 0; width: 80px;">Observation</div>
+              <div style="font-size: 11px; color: var(--text-mid);">4 维度质量评估</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); flex-shrink: 0; width: 80px;">Actions</div>
+              <div style="font-size: 11px; color: var(--text-mid);">5 个 CVTE Skills</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #CC88FF; flex-shrink: 0; width: 80px;">Permissions</div>
+              <div style="font-size: 11px; color: var(--text-mid);">Jira/GitLab 操作门控</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 中间箭头 -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px; gap: 12px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); letter-spacing: 0.1em; writing-mode: vertical-rl; text-orientation: mixed;">基于 / 扩展</div>
+          <div style="font-size: 20px; color: var(--purple);">↓</div>
+        </div>
+
+        <!-- Claude Code 层 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--text-dim); padding: 28px 24px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--text);">Claude Code</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; background: rgba(255,255,255,0.06); color: var(--text-dim); padding: 2px 8px; letter-spacing: 0.1em;">通用 AI Harness</div>
+          </div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.6;">为所有 AI 任务提供基础设施：</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); flex-shrink: 0; width: 80px;">Tools</div>
+              <div style="font-size: 11px; color: var(--text-mid);">Bash/Read/Write/Grep</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); flex-shrink: 0; width: 80px;">Knowledge</div>
+              <div style="font-size: 11px; color: var(--text-mid);">记忆/压缩/多 agent</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); flex-shrink: 0; width: 80px;">Observation</div>
+              <div style="font-size: 11px; color: var(--text-mid);">工具执行观测</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); flex-shrink: 0; width: 80px;">Actions</div>
+              <div style="font-size: 11px; color: var(--text-mid);">Skills 系统</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #CC88FF; flex-shrink: 0; width: 80px;">Permissions</div>
+              <div style="font-size: 11px; color: var(--text-mid);">文件操作确认</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 复用关系说明 -->
+      <div style="margin-top: 20px; padding: 16px 20px; background: rgba(204,136,255,0.04); border-left: 3px solid var(--purple);">
+        <div style="font-size: 12px; color: var(--text-mid); line-height: 1.8;">
+          <strong style="color: var(--purple);">复用策略</strong>：
+          <span style="color: var(--green);">✓ Tools</span> 复用 + 扩展，
+          <span style="color: var(--green);">✓ Knowledge</span> 完全复用机制，
+          <span style="color: var(--orange);">✗ Observation</span> 必须自建（Claude Code 只观测执行，不评估领域质量），
+          <span style="color: var(--green);">✓ Actions</span> 复用 Skills 系统，
+          <span style="color: var(--green);">✓ Permissions</span> 复用机制 + 扩展。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 五层对应 -->
+  <div class="fade-in" style="padding: 0 80px; margin-bottom: 2px;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;">
+
+      <!-- Tools -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--orange); padding: 28px 20px; position: relative;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--orange); text-transform: uppercase; margin-bottom: 12px;">Tools</div>
+        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px;">工具接入层</div>
+        <div style="font-size: 12px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px;">连接外部系统，将 AI 的意图转化为实际动作</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); padding: 4px 8px; background: rgba(255,107,0,0.08);">jira_get_issue</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); padding: 4px 8px; background: rgba(255,107,0,0.08);">gitlab_create_mr</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); padding: 4px 8px; background: rgba(255,107,0,0.08);">git_push_temp_branch</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); padding: 4px 8px; background: rgba(255,107,0,0.08);">local_compile</div>
+          <div style="font-size: 10px; color: var(--text-dim); padding: 4px 8px;">+ 11 更多工具</div>
+        </div>
+        <div style="margin-top: 16px; font-size: 11px; color: var(--green);">✅ 15 个 MCP 工具完整覆盖</div>
+      </div>
+
+      <!-- Knowledge -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--cyan); padding: 28px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px;">Knowledge</div>
+        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px;">领域知识层</div>
+        <div style="font-size: 12px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px;">将 CVTE 特有规范主动注入 AI 上下文，避免依赖记忆</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">CLAUDE.md（自动加载）</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">分支命名规则</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">Jira 字段 ID 映射</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">技术栈仓库对应表</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">SKILL.md 经验教训积累</div>
+        </div>
+        <div style="margin-top: 16px; font-size: 11px; color: var(--green);">✅ 结构化注入，不靠记忆</div>
+      </div>
+
+      <!-- Observation -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--green); padding: 28px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase; margin-bottom: 12px;">Observation</div>
+        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px;">观测评估层</div>
+        <div style="font-size: 12px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px;">记录执行过程，量化质量，为进化提供数据基础</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); padding: 4px 8px; background: rgba(0,212,106,0.06);">task_log_start/step/save</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); padding: 4px 8px; background: rgba(0,212,106,0.06);">4 维度自动评分</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); padding: 4px 8px; background: rgba(0,212,106,0.06);">失败模式识别</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--green); padding: 4px 8px; background: rgba(0,212,106,0.06);">历史数据积累</div>
+        </div>
+        <div style="margin-top: 16px; font-size: 11px; color: var(--green);">✅ 双 AI 评估系统</div>
+      </div>
+
+      <!-- Action Interfaces -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--amber); padding: 28px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--amber); text-transform: uppercase; margin-bottom: 12px;">Action Interfaces</div>
+        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px;">动作接口层</div>
+        <div style="font-size: 12px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px;">定义 AI 可执行的操作边界，通过 Skills 提供结构化工作流</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); padding: 4px 8px; background: rgba(255,179,0,0.06);">/fix-jira-bug</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); padding: 4px 8px; background: rgba(255,179,0,0.06);">/merge-to-release</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); padding: 4px 8px; background: rgba(255,179,0,0.06);">/apply-vendor-patch</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); padding: 4px 8px; background: rgba(255,179,0,0.06);">/evaluate-task</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); padding: 4px 8px; background: rgba(255,179,0,0.06);">/evolve</div>
+        </div>
+        <div style="margin-top: 16px; font-size: 11px; color: var(--green);">✅ 5 个标准化 Skills</div>
+      </div>
+
+      <!-- Permissions -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid #CC88FF; padding: 28px 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #CC88FF; text-transform: uppercase; margin-bottom: 12px;">Permissions</div>
+        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px;">权限边界层</div>
+        <div style="font-size: 12px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px;">高风险不可逆操作设置人工确认门控，防止 AI 误操作</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #CC88FF; padding: 4px 8px; background: rgba(204,136,255,0.06);">dry_run=True（默认）</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #CC88FF; padding: 4px 8px; background: rgba(204,136,255,0.06);">push → 预览确认</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #CC88FF; padding: 4px 8px; background: rgba(204,136,255,0.06);">create_mr → 预览确认</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #CC88FF; padding: 4px 8px; background: rgba(204,136,255,0.06);">jira_transition → 预览确认</div>
+        </div>
+        <div style="margin-top: 16px; font-size: 11px; color: var(--green);">✅ 二阶段确认门控</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Knowledge 分层设计 -->
+  <div class="fade-in" style="padding: 0 80px; margin-bottom: 2px;">
+    <div style="background: var(--bg-panel); padding: 36px 48px;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--cyan); text-transform: uppercase; margin-bottom: 16px;">Knowledge Layer Design</div>
+      <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">知识分层策略 — CLAUDE.md vs SKILL.md</div>
+      <div style="font-size: 13px; color: var(--text-mid); line-height: 1.8; margin-bottom: 24px; max-width: 640px;">
+        并非所有知识都值得每次注入。<strong style="color: var(--text);">按使用频率分层放置</strong>，是 token 效率的关键——全局通用规范放 CLAUDE.md 每次自动加载，任务专属细节放 SKILL.md 按需读取。
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 2px; align-items: start;">
+
+        <!-- CLAUDE.md 列 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--cyan); padding: 24px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--cyan);">CLAUDE.md</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; background: rgba(0,200,255,0.12); color: var(--cyan); padding: 2px 8px; letter-spacing: 0.1em;">每次会话自动加载</div>
+          </div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.6;">适合放置<strong style="color: var(--text);">跨多个 Skill 都需要</strong>的全局规范：</div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--text-mid);">
+              <span style="color: var(--cyan); flex-shrink: 0;">✓</span> 工作目录说明（防止误操作）
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--text-mid);">
+              <span style="color: var(--cyan); flex-shrink: 0;">✓</span> 分支命名规则（多 Skill 通用）
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--text-mid);">
+              <span style="color: var(--cyan); flex-shrink: 0;">✓</span> 临时分支命名规范
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--text-mid);">
+              <span style="color: var(--cyan); flex-shrink: 0;">✓</span> 提交消息格式（所有 git 操作）
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: var(--text-mid);">
+              <span style="color: var(--cyan); flex-shrink: 0;">✓</span> Permissions 门控规则（全局）
+            </div>
+          </div>
+        </div>
+
+        <!-- 中间分隔 -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 16px; gap: 8px; align-self: center;">
+          <div style="width: 1px; height: 40px; background: var(--border);"></div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); letter-spacing: 0.1em; white-space: nowrap;">按需 vs 全量</div>
+          <div style="width: 1px; height: 40px; background: var(--border);"></div>
+        </div>
+
+        <!-- SKILL.md 列 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--amber); padding: 24px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--amber);">SKILL.md</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; background: rgba(255,179,0,0.12); color: var(--amber); padding: 2px 8px; letter-spacing: 0.1em;">Skill 调用时按需读取</div>
+          </div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.6;">适合放置<strong style="color: var(--text);">该任务专属</strong>的细节知识：</div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px;">
+              <span style="color: var(--amber); flex-shrink: 0;">fix-jira-bug:</span>
+              <span style="color: var(--text-mid);">Jira 流转必填字段、技术栈仓库映射</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px;">
+              <span style="color: var(--amber); flex-shrink: 0;">merge-to-release:</span>
+              <span style="color: var(--text-mid);">cherry-pick 前置检查 SOP</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px;">
+              <span style="color: var(--amber); flex-shrink: 0;">apply-vendor-patch:</span>
+              <span style="color: var(--text-mid);">stash + rebase 顺序约定</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px;">
+              <span style="color: var(--amber); flex-shrink: 0;">evolve:</span>
+              <span style="color: var(--text-mid);">进化引擎分析阈值配置</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px;">
+              <span style="color: var(--amber); flex-shrink: 0;">经验教训:</span>
+              <span style="color: var(--text-mid);">自进化自动写回，随时间积累</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div style="margin-top: 16px; padding: 12px 16px; background: rgba(255,107,0,0.04); border-left: 3px solid var(--orange); font-size: 12px; color: var(--text-mid); line-height: 1.7;">
+        <strong style="color: var(--orange);">设计原则</strong>：全局通用 → CLAUDE.md（每次加载），任务专属 → SKILL.md（按需注入）。避免把所有知识堆进 CLAUDE.md 造成无关 token 消耗。
+      </div>
+    </div>
+  </div>
+
+  <!-- 进化闭环 -->
+  <div class="fade-in" style="padding: 0 80px;">
+    <div style="background: var(--bg-panel); padding: 36px 48px; display: flex; align-items: center; gap: 48px;">
+      <div style="flex-shrink: 0;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 12px;">Evolution Loop</div>
+        <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">自进化闭环 — 超越标准定义</div>
+        <div style="font-size: 13px; color: var(--text-mid); line-height: 1.8; max-width: 520px;">
+          标准 Harness 是静态的；CVTE Harness 在此基础上增加了<strong style="color: var(--text);">自进化机制</strong>：
+          每次任务执行后自动评估 → 积累失败模式 → 每周分析 → 自动将 suggestions 写回 SKILL.md →
+          下次执行时 Knowledge 更丰富。<strong style="color: var(--orange);">Harness 的能力随时间单调递增。</strong>
+        </div>
+      </div>
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 0; min-width: 0;">
+        <div style="text-align: center; padding: 12px 16px; background: rgba(255,107,0,0.08); border: 1px solid rgba(255,107,0,0.3); font-size: 12px; color: var(--orange); font-family: 'JetBrains Mono', monospace; white-space: nowrap;">执行任务</div>
+        <div style="color: var(--orange); padding: 0 8px; font-size: 14px; flex-shrink: 0;">→</div>
+        <div style="text-align: center; padding: 12px 16px; background: rgba(0,212,106,0.06); border: 1px solid rgba(0,212,106,0.3); font-size: 12px; color: var(--green); font-family: 'JetBrains Mono', monospace; white-space: nowrap;">自动评估</div>
+        <div style="color: var(--orange); padding: 0 8px; font-size: 14px; flex-shrink: 0;">→</div>
+        <div style="text-align: center; padding: 12px 16px; background: rgba(255,179,0,0.06); border: 1px solid rgba(255,179,0,0.3); font-size: 12px; color: var(--amber); font-family: 'JetBrains Mono', monospace; white-space: nowrap;">生成建议</div>
+        <div style="color: var(--orange); padding: 0 8px; font-size: 14px; flex-shrink: 0;">→</div>
+        <div style="text-align: center; padding: 12px 16px; background: rgba(0,200,255,0.06); border: 1px solid rgba(0,200,255,0.3); font-size: 12px; color: var(--cyan); font-family: 'JetBrains Mono', monospace; white-space: nowrap;">写回 SKILL.md</div>
+        <div style="color: var(--orange); padding: 0 8px; font-size: 14px; flex-shrink: 0;">↩</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="background">
+  <div class="section-header fade-in">
+    <div class="section-label">// 02 — Context</div>
+    <h2 class="section-title">为什么需要 CVTE Harness<span class="dim">？</span></h2>
+  </div>
+
+  <div class="bg-layout fade-in">
+    <!-- Harness Engineering -->
+    <div class="bg-panel bg-panel-large">
+      <div class="panel-num">01</div>
+      <div class="panel-icon">⚙</div>
+      <div class="panel-title">什么是 Harness Engineering</div>
+      <div class="panel-body">
+        <p>模型只提供智能，<strong>Harness 让智能真正能用起来</strong>。其核心目标是：在特定任务场景下，<strong>大幅提升模型的准确率与执行效率</strong>。</p>
+        <br>
+        <p>准确率提升意味着更少的重试和纠错轮次；效率提升意味着达成目标所需的 token 消耗也随之减少 —— <strong>高准确率与低 token 消耗，是同一件事的两面</strong>。</p>
+        <br>
+        <p>实现路径：为 AI 搭建工程环境，提供：</p>
+        <br>
+        <p>→ <strong>工具接入</strong>：连接 Jira、GitLab、Git 等系统<br>
+        → <strong>流程约束</strong>：结构化 SOP，减少模型自由发挥的误差<br>
+        → <strong>上下文感知</strong>：技术栈、仓库、用户信息精确注入<br>
+        → <strong>质量闭环</strong>：执行后自动评估，数据驱动持续优化</p>
+      </div>
+    </div>
+
+    <!-- AI 已有 -->
+    <div class="bg-panel">
+      <div class="panel-num">02</div>
+      <div class="panel-icon">✓</div>
+      <div class="panel-title">功能元开发 — AI 已落地</div>
+      <div class="panel-body">
+        <strong>AI 导入功能元</strong>大幅提升了导入效率，这一环节已经有成熟的 AI 实践。
+        <br><br>
+        但这仅仅是研发流程的一部分，<strong>消耗开发工时更多的缺陷 Debug 环节</strong>，至今还没有高效的 AI 解决方案。
+      </div>
+    </div>
+
+    <!-- 问题 -->
+    <div class="bg-panel">
+      <div class="panel-num">03</div>
+      <div class="panel-icon">!</div>
+      <div class="panel-title">缺陷 Debug — 最耗时的环节</div>
+      <div class="panel-body">
+        每个 Bug 的处理都涉及：<strong>分析→修复→提测→合入</strong>，横跨研发测试、集成测试、生产测试全链路。
+        <br><br>
+        每次还要手动写 commit、填 Jira、创建 MR —— <strong>这些重复劳动占去大量时间</strong>。
+      </div>
+    </div>
+  </div>
+
+  <!-- 研发流程全景 -->
+  <div class="process-track fade-in">
+    <div class="process-label-row">CVTE 系统软件 研发流程全景</div>
+
+    <div class="flow-stages">
+      <div class="stage">
+        <div class="stage-box">
+          <div class="stage-number">01</div>
+          <div class="stage-name">功能元开发</div>
+        </div>
+      </div>
+      <div class="stage-arrow active">→</div>
+      <div class="stage">
+        <div class="stage-box highlighted">
+          <div class="stage-number">02</div>
+          <div class="stage-name">缺陷 Debug <span class="ai-badge">AI NOW</span></div>
+        </div>
+      </div>
+      <div class="stage-arrow active">→</div>
+      <div class="stage">
+        <div class="stage-box highlighted">
+          <div class="stage-number">03</div>
+          <div class="stage-name">研发测试</div>
+        </div>
+      </div>
+      <div class="stage-arrow">→</div>
+      <div class="stage">
+        <div class="stage-box highlighted">
+          <div class="stage-number">04</div>
+          <div class="stage-name">集成测试</div>
+        </div>
+      </div>
+      <div class="stage-arrow">→</div>
+      <div class="stage">
+        <div class="stage-box highlighted">
+          <div class="stage-number">05</div>
+          <div class="stage-name">生产测试</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-annotation">
+      <strong>缺陷 Debug</strong> 贯穿研发测试、集成测试、生产测试三个阶段，是整个研发流程中 <strong>最耗工时</strong> 的环节。<br>
+      CVTE Harness 在此切入：<strong>简单问题一步解决，复杂问题节约提交/填写/备注的重复劳动</strong>，让研发专注在真正有价值的工作上。
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-header fade-in">
+    <div class="section-label">// 03 — Architecture</div>
+    <h2 class="section-title">系统架构<span class="dim"> — 三层设计</span></h2>
+  </div>
+
+  <div class="arch-canvas fade-in">
+    <div class="arch-layers">
+
+      <!-- Layer 1: User Interface -->
+      <div class="arch-layer">
+        <div class="arch-layer-label">用户层</div>
+        <div class="arch-blocks">
+          <div class="arch-block" style="border-color: var(--orange)">
+            <div class="arch-block-title">Claude Code CLI</div>
+            <div class="arch-block-desc">用户在 Claude Code 中输入指令（如：帮我修复 H01252608-1797），AI 自动调度对应 Skill</div>
+            <div class="arch-block-tools">
+              <span class="tool-chip">/ fix-jira-bug</span>
+              <span class="tool-chip">/ merge-to-release</span>
+              <span class="tool-chip">/ apply-vendor-patch</span>
+              <span class="tool-chip">/ evaluate-task</span>
+              <span class="tool-chip">/ evolve</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-connector"><div class="arch-connector-dot"></div></div>
+
+      <!-- Layer 2: Harness Core -->
+      <div class="arch-layer">
+        <div class="arch-layer-label">核心层</div>
+        <div class="arch-blocks">
+          <div class="arch-block">
+            <div class="arch-block-title">Skills 工作流引擎</div>
+            <div class="arch-block-desc">Markdown 定义的结构化工作流，包含决策分支和 SOP 约束，驱动 AI 按规范执行任务</div>
+          </div>
+          <div class="arch-block" style="border-color: var(--orange)">
+            <div class="arch-block-title">MCP Server</div>
+            <div class="arch-block-desc">Python 实现的 MCP 工具服务器，提供 Jira/GitLab/Git 深度集成，以及评估系统工具链</div>
+            <div class="arch-block-tools">
+              <span class="tool-chip">jira.py</span>
+              <span class="tool-chip">gitlab.py</span>
+              <span class="tool-chip">git.py</span>
+              <span class="tool-chip">evaluator.py</span>
+              <span class="tool-chip">evolution.py</span>
+            </div>
+          </div>
+          <div class="arch-block">
+            <div class="arch-block-title">双 AI 评估系统</div>
+            <div class="arch-block-desc">生成器 AI 执行任务，评估器 AI 对完成度/效率/质量/规范性四维度独立打分，数据积累驱动自进化</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-connector"><div class="arch-connector-dot"></div></div>
+
+      <!-- Layer 3: External -->
+      <div class="arch-layer">
+        <div class="arch-layer-label">集成层</div>
+        <div class="arch-blocks">
+          <div class="arch-block">
+            <div class="arch-block-title">Jira API</div>
+            <div class="arch-block-desc">获取 Bug 信息、添加评论、流转工单状态</div>
+          </div>
+          <div class="arch-block">
+            <div class="arch-block-title">GitLab API</div>
+            <div class="arch-block-desc">创建 Merge Request，管理多仓库合并</div>
+          </div>
+          <div class="arch-block">
+            <div class="arch-block-title">本地 Git</div>
+            <div class="arch-block-desc">代码提交、分支推送、cherry-pick、补丁应用</div>
+          </div>
+          <div class="arch-block">
+            <div class="arch-block-title">本地编译环境</div>
+            <div class="arch-block-desc">可选的本地编译验证，确保代码提交前质量</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header fade-in">
+    <div class="section-label">// 04 — Skills</div>
+    <h2 class="section-title">5 个核心 Skills<span class="dim"> — 端到端自动化</span></h2>
+  </div>
+
+  <div class="skills-grid fade-in">
+
+    <!-- fix-jira-bug -->
+    <div class="skill-card" style="grid-column: span 2">
+      <div class="skill-header">
+        <div class="skill-icon">🐛</div>
+        <div class="skill-meta">
+          <div class="skill-name">fix-jira-bug</div>
+          <div class="skill-tag">● 全自动 · 4 决策分支 · Bug 修复核心工作流</div>
+        </div>
+      </div>
+      <p class="skill-desc">
+        输入一个 Jira Bug ID，AI 自动完成：获取信息 → 分析代码 → 判断类型 → 修复/流转 → 提交代码 → 创建 MR → 流转 Jira 状态 → 质量评估。
+        对于<strong>无法修复的问题</strong>（芯片原厂闭源、跨技术栈、问题无效），及时终止并给出处理建议，避免无效工作。
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.1em;margin-bottom:8px;">决策分支</div>
+          <div class="skill-flow">
+            <div class="flow-step"><span class="step-num">A1</span> 芯片原厂闭源 → 提示联动原厂<span class="branch-badge">ESCALATE</span></div>
+            <div class="flow-step"><span class="step-num">A2</span> 跨技术栈 → 建议流转其他工程师<span class="branch-badge">TRANSFER</span></div>
+            <div class="flow-step"><span class="step-num">A3</span> 问题无效 → 建议关闭<span class="branch-badge">CLOSE</span></div>
+            <div class="flow-step"><span class="step-num">A4</span> 本技术栈可修复 → 完整 9 步流程<span class="branch-badge">FIX</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.1em;margin-bottom:8px;">A4 分支执行步骤</div>
+          <div class="skill-flow">
+            <div class="flow-step"><span class="step-num">01</span> jira_add_comment (原因分析)</div>
+            <div class="flow-step"><span class="step-num">02</span> jira_transition_status (处理中)</div>
+            <div class="flow-step"><span class="step-num">03</span> 修改代码文件</div>
+            <div class="flow-step"><span class="step-num">04</span> local_compile (可选验证)</div>
+            <div class="flow-step"><span class="step-num">05</span> git_commit_with_template</div>
+            <div class="flow-step"><span class="step-num">06</span> git_push_temp_branch</div>
+            <div class="flow-step"><span class="step-num">07</span> 提示触发 Jenkins</div>
+            <div class="flow-step"><span class="step-num">08</span> gitlab_create_mr</div>
+            <div class="flow-step"><span class="step-num">09</span> jira_transition_status (提测)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- merge-to-release -->
+    <div class="skill-card">
+      <div class="skill-header">
+        <div class="skill-icon">🔀</div>
+        <div class="skill-meta">
+          <div class="skill-name">merge-to-release</div>
+          <div class="skill-tag">● 全自动 · 多仓库 cherry-pick</div>
+        </div>
+      </div>
+      <p class="skill-desc">多仓库并行 cherry-pick 到 release 分支，前置检查 SOP 防止遗漏和冲突，完成后汇总所有 MR 链接并更新 Jira。</p>
+      <div class="skill-flow">
+        <div class="flow-step"><span class="step-num">→</span> 前置检查：状态调研 + 依赖分析</div>
+        <div class="flow-step"><span class="step-num">→</span> N 个仓库并行 cherry-pick</div>
+        <div class="flow-step"><span class="step-num">→</span> 完整性验证：N 仓库 → N 个 MR</div>
+        <div class="flow-step"><span class="step-num">→</span> 汇总链接 + 更新 Jira</div>
+      </div>
+    </div>
+
+    <!-- apply-vendor-patch -->
+    <div class="skill-card">
+      <div class="skill-header">
+        <div class="skill-icon">🔧</div>
+        <div class="skill-meta">
+          <div class="skill-name">apply-vendor-patch</div>
+          <div class="skill-tag">● 全自动 · 芯片原厂补丁合入</div>
+        </div>
+      </div>
+      <p class="skill-desc">stash 保存当前工作 → rebase 同步最新代码 → 应用原厂补丁 → 冲突处理 → 提交代码 → 恢复工作现场。全程保护本地未提交修改。</p>
+      <div class="skill-flow">
+        <div class="flow-step"><span class="step-num">→</span> git stash（保护工作区）</div>
+        <div class="flow-step"><span class="step-num">→</span> git rebase（基于最新代码）</div>
+        <div class="flow-step"><span class="step-num">→</span> git apply（应用补丁）</div>
+        <div class="flow-step"><span class="step-num">→</span> 提交 + git stash pop</div>
+      </div>
+    </div>
+
+    <!-- evaluate-task -->
+    <div class="skill-card">
+      <div class="skill-header">
+        <div class="skill-icon">📊</div>
+        <div class="skill-meta">
+          <div class="skill-name">evaluate-task</div>
+          <div class="skill-tag">● 自动触发 · 4 维度打分</div>
+        </div>
+      </div>
+      <p class="skill-desc">任务完成后自动评估。基于真实执行日志，从完成度、效率、质量、规范性四维度客观打分，输出结构化反馈和改进建议。</p>
+      <div class="skill-flow">
+        <div class="flow-step"><span class="step-num">→</span> 完成度 (0-10)：步骤是否完整</div>
+        <div class="flow-step"><span class="step-num">→</span> 效率 (0-10)：一次通过率/耗时</div>
+        <div class="flow-step"><span class="step-num">→</span> 质量 (0-10)：无错误/输出完整</div>
+        <div class="flow-step"><span class="step-num">→</span> 规范性 (0-10)：遵循 SOP</div>
+      </div>
+    </div>
+
+    <!-- evolve -->
+    <div class="skill-card">
+      <div class="skill-header">
+        <div class="skill-icon">🔄</div>
+        <div class="skill-meta">
+          <div class="skill-name">evolve</div>
+          <div class="skill-tag">● 每周自动 · 自进化分析引擎</div>
+        </div>
+      </div>
+      <p class="skill-desc">每周一 8:57 自动分析历史数据，识别高频失败模式，生成分级优化建议（高/中/低优先级），形成 AI 能力的持续改进闭环。</p>
+      <div class="skill-flow">
+        <div class="flow-step"><span class="step-num">→</span> 统计分析：平均分/通过率/耗时</div>
+        <div class="flow-step"><span class="step-num">→</span> 模式识别：高频失败自动浮现</div>
+        <div class="flow-step"><span class="step-num">→</span> 分级建议：高/中/低优先级</div>
+        <div class="flow-step"><span class="step-num">→</span> 生成报告 → 人工审核 → 迭代</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MCP TOOLS -->
+<section id="mcp">
+  <div class="section-header fade-in">
+    <div class="section-label">// 05 — MCP Tools</div>
+    <h2 class="section-title">15 个 MCP 工具<span class="dim"> — 深度系统集成</span></h2>
+  </div>
+
+  <div class="mcp-grid fade-in">
+
+    <div class="mcp-group">
+      <div class="mcp-group-header">
+        <div class="mcp-group-dot"></div>
+        <div class="mcp-group-title">Jira</div>
+        <div class="mcp-group-count">3 tools</div>
+      </div>
+      <div class="mcp-tool-list">
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">jira_get_issue</div>
+          <div class="mcp-tool-desc">获取 Bug 详情</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">jira_add_comment</div>
+          <div class="mcp-tool-desc">添加评论/备注</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">jira_transition_status</div>
+          <div class="mcp-tool-desc">流转状态 + 自定义字段</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcp-group">
+      <div class="mcp-group-header">
+        <div class="mcp-group-dot"></div>
+        <div class="mcp-group-title">GitLab</div>
+        <div class="mcp-group-count">1 tool</div>
+      </div>
+      <div class="mcp-tool-list">
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">gitlab_create_mr</div>
+          <div class="mcp-tool-desc">创建 Merge Request</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcp-group">
+      <div class="mcp-group-header">
+        <div class="mcp-group-dot"></div>
+        <div class="mcp-group-title">Git</div>
+        <div class="mcp-group-count">2 tools</div>
+      </div>
+      <div class="mcp-tool-list">
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">git_commit_with_template</div>
+          <div class="mcp-tool-desc">标准模板提交</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">git_push_temp_branch</div>
+          <div class="mcp-tool-desc">推送临时分支</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcp-group">
+      <div class="mcp-group-header">
+        <div class="mcp-group-dot"></div>
+        <div class="mcp-group-title">配置 & 工具</div>
+        <div class="mcp-group-count">3 tools</div>
+      </div>
+      <div class="mcp-tool-list">
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">cvte_harness_get_config</div>
+          <div class="mcp-tool-desc">读取配置</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">cvte_harness_set_config</div>
+          <div class="mcp-tool-desc">写入配置</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">parse_manifest</div>
+          <div class="mcp-tool-desc">解析 repo manifest</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcp-group">
+      <div class="mcp-group-header">
+        <div class="mcp-group-dot"></div>
+        <div class="mcp-group-title">编译</div>
+        <div class="mcp-group-count">1 tool</div>
+      </div>
+      <div class="mcp-tool-list">
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">local_compile</div>
+          <div class="mcp-tool-desc">本地编译验证</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcp-group">
+      <div class="mcp-group-header">
+        <div class="mcp-group-dot"></div>
+        <div class="mcp-group-title">评估系统</div>
+        <div class="mcp-group-count">5 tools</div>
+      </div>
+      <div class="mcp-tool-list">
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">task_log_start</div>
+          <div class="mcp-tool-desc">开始记录任务</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">task_log_step</div>
+          <div class="mcp-tool-desc">记录执行步骤</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">task_log_save</div>
+          <div class="mcp-tool-desc">保存 + 触发评估</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">task_evaluate</div>
+          <div class="mcp-tool-desc">手动触发评估</div>
+        </div>
+        <div class="mcp-tool">
+          <div class="mcp-tool-name">harness_evolve</div>
+          <div class="mcp-tool-desc">运行自进化分析</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DUAL AI -->
+<section id="dual-ai">
+  <div class="section-header fade-in">
+    <div class="section-label">// 06 — Dual AI</div>
+    <h2 class="section-title">双 AI 协作<span class="dim"> — 执行 + 评估 + 进化</span></h2>
+  </div>
+
+  <div class="dual-ai-canvas fade-in">
+    <div class="dual-ai-grid">
+
+      <div class="ai-node ai-node-highlight">
+        <div class="ai-node-icon">🤖</div>
+        <div class="ai-node-title">生成器 AI</div>
+        <div class="ai-node-role">Executor</div>
+        <div class="ai-node-items">
+          <div class="ai-node-item">task_log_start()</div>
+          <div class="ai-node-item">执行工作流步骤</div>
+          <div class="ai-node-item">task_log_step() × N</div>
+          <div class="ai-node-item">task_log_save()</div>
+        </div>
+      </div>
+
+      <div class="ai-arrow">
+        <div class="ai-arrow-line"></div>
+        <div class="ai-arrow-label">自动触发</div>
+      </div>
+
+      <div class="ai-node ai-node-highlight">
+        <div class="ai-node-icon">⚖</div>
+        <div class="ai-node-title">评估器 AI</div>
+        <div class="ai-node-role">Evaluator</div>
+        <div class="ai-node-items">
+          <div class="ai-node-item">完成度评分</div>
+          <div class="ai-node-item">效率评分</div>
+          <div class="ai-node-item">质量评分</div>
+          <div class="ai-node-item">规范性评分</div>
+          <div class="ai-node-item">识别失败模式</div>
+        </div>
+      </div>
+
+      <div class="ai-arrow">
+        <div class="ai-arrow-line"></div>
+        <div class="ai-arrow-label">数据积累</div>
+      </div>
+
+      <div class="ai-node">
+        <div class="ai-node-icon">📈</div>
+        <div class="ai-node-title">自进化引擎</div>
+        <div class="ai-node-role">Evolution</div>
+        <div class="ai-node-items">
+          <div class="ai-node-item">统计分析</div>
+          <div class="ai-node-item">失败模式识别</div>
+          <div class="ai-node-item">优化建议生成</div>
+          <div class="ai-node-item">每周一自动运行</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-header fade-in">
+    <div class="section-label">// 07 — Roadmap</div>
+    <h2 class="section-title">路线图<span class="dim"> — 从基础到平台</span></h2>
+  </div>
+
+  <div class="roadmap-track fade-in">
+    <div class="roadmap-timeline">
+
+      <div class="roadmap-item">
+        <div class="roadmap-dot active"></div>
+        <div class="roadmap-phase">Phase 1 — 当前</div>
+        <div class="roadmap-title">缺陷 Debug 核心场景</div>
+        <div class="roadmap-desc">
+          端到端 Bug 修复自动化，覆盖 Jira/GitLab/Git 完整集成，双 AI 评估系统，自进化引擎。
+          Plugin 方式发布，claude plugin add 一键安装。
+        </div>
+        <div class="roadmap-tags">
+          <span class="roadmap-tag done">fix-jira-bug ✓</span>
+          <span class="roadmap-tag done">merge-to-release ✓</span>
+          <span class="roadmap-tag done">MCP Server ✓</span>
+          <span class="roadmap-tag done">评估系统 ✓</span>
+          <span class="roadmap-tag done">Plugin 发布 ✓</span>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-phase">Phase 2 — 近期</div>
+        <div class="roadmap-title">多 IDE 适配</div>
+        <div class="roadmap-desc">
+          扩展 Cursor、Codex、GitHub Copilot 兼容，让更多 AI IDE 用户受益。
+        </div>
+        <div class="roadmap-tags">
+          <span class="roadmap-tag">Cursor 适配</span>
+          <span class="roadmap-tag">Codex 适配</span>
+          <span class="roadmap-tag">Copilot 适配</span>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div class="roadmap-phase">Phase 3 — 规划中</div>
+        <div class="roadmap-title">平台对接 — 更复杂场景</div>
+        <div class="roadmap-desc">
+          对接 Jenkins 实现自动化构建触发，对接企业微信 CLI 实现消息通知，
+          支持更复杂的跨系统工作流场景。
+        </div>
+        <div class="roadmap-tags">
+          <span class="roadmap-tag">Jenkins 集成</span>
+          <span class="roadmap-tag">企业微信 CLI</span>
+          <span class="roadmap-tag">复杂场景工作流</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section id="install">
+  <div class="section-header fade-in">
+    <div class="section-label">// 08 — Get Started</div>
+    <h2 class="section-title">快速开始<span class="dim"> — 三步上手</span></h2>
+  </div>
+
+  <div class="install-layout fade-in">
+
+    <div class="install-panel">
+      <div style="margin-bottom:24px">
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">安装</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6">前置要求：Python 3.8+、Claude Code CLI、Jira / GitLab Personal Access Token</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="code-dot code-dot-r"></div>
+          <div class="code-dot code-dot-y"></div>
+          <div class="code-dot code-dot-g"></div>
+          <div class="code-block-title">bash</div>
+        </div>
+        <pre><span class="code-comment"># 1. 克隆仓库</span>
+<span class="code-prompt">$ </span><span class="code-cmd">git clone</span> <span class="code-str">https://github.com/kirk-haodong/cvte-harness.git</span>
+
+<span class="code-comment"># 2. 添加 Plugin（自动安装依赖）</span>
+<span class="code-prompt">$ </span><span class="code-cmd">claude plugin add</span> ./cvte-harness
+
+<span class="code-comment"># 3. 验证安装</span>
+<span class="code-prompt">$ </span><span class="code-cmd">claude plugin list</span>
+<span class="code-str">✓ cvte-harness@1.1.0</span>
+
+<span class="code-prompt">$ </span><span class="code-cmd">claude mcp list</span>
+<span class="code-str">✓ cvte-harness — running</span></pre>
+      </div>
+
+      <div style="margin-top:24px">
+        <div style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text-mid)">首次使用配置：</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
+            <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
+            运行 /cvte-harness:setup 进行配置引导
+          </div>
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
+            <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
+            或直接使用任意 skill，系统自动提示配置
+          </div>
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
+            <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
+            配置保存在 ~/.cvte-harness/config.json
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="install-panel">
+      <div style="margin-bottom:24px">
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">使用示例</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6">在 Claude Code 中，用自然语言描述任务即可</div>
+      </div>
+
+      <div class="code-block" style="margin-bottom:16px">
+        <div class="code-block-header">
+          <div class="code-dot code-dot-r"></div>
+          <div class="code-dot code-dot-y"></div>
+          <div class="code-dot code-dot-g"></div>
+          <div class="code-block-title">claude code — 修复 Bug</div>
+        </div>
+        <pre><span class="code-prompt">You: </span><span class="code-cmd">帮我修复 H01252612-785</span>
+
+<span class="code-comment"># AI 自动执行：</span>
+<span class="code-str">✓</span> 获取 Jira Bug 信息
+<span class="code-str">✓</span> 分析代码，定位问题
+<span class="code-str">✓</span> 判断：本技术栈可修复
+<span class="code-str">✓</span> 修改代码并验证
+<span class="code-str">✓</span> git commit (标准模板)
+<span class="code-str">✓</span> git push → 创建 MR
+<span class="code-str">✓</span> Jira 状态 → 提测
+<span class="code-str">✓</span> 质量评估: <span class="code-key">8.5 / 10</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="code-dot code-dot-r"></div>
+          <div class="code-dot code-dot-y"></div>
+          <div class="code-dot code-dot-g"></div>
+          <div class="code-block-title">claude code — 合入 Release</div>
+        </div>
+        <pre><span class="code-prompt">You: </span><span class="code-cmd">把 H01252612-785 合入 release_obm</span>
+
+<span class="code-comment"># AI 自动执行：</span>
+<span class="code-str">✓</span> 前置检查：3 个涉及仓库
+<span class="code-str">✓</span> 依赖分析：无冲突
+<span class="code-str">✓</span> cherry-pick × 3 仓库
+<span class="code-str">✓</span> 创建 MR × 3
+<span class="code-str">✓</span> 更新 Jira 备注 + 状态</pre>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">CVTE—HARNESS</div>
+  <div class="footer-credit">
+    Based on Harness Engineering · Made with ❤ by CVTE System Software Team · v1.1.0
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Animated counter for hero stats
+  function animateCounter(el, target, suffix = '') {
+    let current = 0;
+    const step = target / 30;
+    const interval = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.floor(current) + suffix;
+      if (current >= target) clearInterval(interval);
+    }, 50);
+  }
+
+  // Start counter animation when hero is visible
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.stat-num').forEach(el => {
+          const text = el.textContent;
+          if (text === '5') animateCounter(el, 5);
+          else if (text === '15') animateCounter(el, 15);
+          else if (text === '4') animateCounter(el, 4);
+        });
+        heroObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) heroObserver.observe(heroStats);
+
+  // Active nav link highlighting
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 80;
+      if (window.scrollY >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current
+        ? 'var(--orange)'
+        : 'var(--text-dim)';
+    });
+  });
+
+  // Data flow animation - dots traveling along connections
+  const connectors = document.querySelectorAll('.arch-connector-dot');
+  connectors.forEach((dot, i) => {
+    dot.style.animationDelay = `${i * 0.7}s`;
+  });
+</script>
+
 </body>
 </html>
