@@ -1140,7 +1140,7 @@
 
   <h1 class="hero-title">
     SST-DevFlow AI<br>
-    <span class="accent">让 AI 替你干杂活</span>
+    <span class="accent">让 AI 替你干活</span>
   </h1>
 
   <div class="hero-subtitle-en">Bug 修复 · 代码合入 · Jira 流转 · 全程自动化</div>
@@ -1151,7 +1151,7 @@
   </p>
 
   <div class="hero-cta-row">
-    <a href="#install" class="btn-primary">立即安装</a>
+    <a href="#install" class="btn-primary">申请使用</a>
     <a href="#architecture" class="btn-ghost">查看架构</a>
   </div>
 
@@ -1999,28 +1999,31 @@
         <div class="roadmap-title">缺陷 Debug 核心场景</div>
         <div class="roadmap-desc">
           端到端 Bug 修复自动化，覆盖 Jira/GitLab/Git 完整集成，双 AI 评估系统，自进化引擎。
-          Plugin 方式发布，claude plugin add 一键安装。
+          当前在 Linux 环境下完成测试验证，内测阶段运行中。
         </div>
         <div class="roadmap-tags">
           <span class="roadmap-tag done">fix-jira-bug ✓</span>
           <span class="roadmap-tag done">merge-to-release ✓</span>
           <span class="roadmap-tag done">MCP Server ✓</span>
           <span class="roadmap-tag done">评估系统 ✓</span>
-          <span class="roadmap-tag done">Plugin 发布 ✓</span>
+          <span class="roadmap-tag done">Linux 验证 ✓</span>
         </div>
       </div>
 
       <div class="roadmap-item">
         <div class="roadmap-dot"></div>
-        <div class="roadmap-phase">Phase 2 — 近期</div>
-        <div class="roadmap-title">多 IDE 适配</div>
+        <div class="roadmap-phase">Phase 2 — 近期规划</div>
+        <div class="roadmap-title">质量提升 · 平台扩展 · 发布</div>
         <div class="roadmap-desc">
-          扩展 Cursor、Codex、GitHub Copilot 兼容，让更多 AI IDE 用户受益。
+          全面优化执行质量与覆盖范围，完成 Marketplace 发布，支持更多 AI IDE 和操作系统。
         </div>
         <div class="roadmap-tags">
-          <span class="roadmap-tag">Cursor 适配</span>
-          <span class="roadmap-tag">Codex 适配</span>
-          <span class="roadmap-tag">Copilot 适配</span>
+          <span class="roadmap-tag">Skill 调试 — 提升一次完成率</span>
+          <span class="roadmap-tag">Dify 对接 — 日志分析降低 token</span>
+          <span class="roadmap-tag">扩展更多工作场景</span>
+          <span class="roadmap-tag">Cursor 支持</span>
+          <span class="roadmap-tag">Windows / macOS 支持</span>
+          <span class="roadmap-tag">Marketplace 发布</span>
         </div>
       </div>
 
@@ -2047,49 +2050,44 @@
 <section id="install">
   <div class="section-header fade-in">
     <div class="section-label">// 07 — Get Started</div>
-    <h2 class="section-title">快速开始<span class="dim"> — 三步上手</span></h2>
+    <h2 class="section-title">快速开始<span class="dim"> — 申请使用</span></h2>
   </div>
 
   <div class="install-layout fade-in">
 
     <div class="install-panel">
       <div style="margin-bottom:24px">
-        <div style="font-size:18px;font-weight:700;margin-bottom:8px">安装</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:1.6">前置要求：Python 3.8+、Claude Code CLI、Jira / GitLab Personal Access Token</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">获取访问权限</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6">SST-DevFlow AI 目前处于内测阶段，尚未发布到 Marketplace。</div>
       </div>
 
-      <div class="code-block">
-        <div class="code-block-header">
-          <div class="code-dot code-dot-r"></div>
-          <div class="code-dot code-dot-y"></div>
-          <div class="code-dot code-dot-g"></div>
-          <div class="code-block-title">bash</div>
-        </div>
-        <pre><span class="code-comment"># 从 Marketplace 一键安装</span>
-<span class="code-prompt">$ </span><span class="code-cmd">claude plugin add</span> <span class="code-str">sst-devflow</span>
-
-<span class="code-comment"># 验证安装</span>
-<span class="code-prompt">$ </span><span class="code-cmd">claude plugin list</span>
-<span class="code-str">✓ sst-devflow@1.1.0</span>
-
-<span class="code-prompt">$ </span><span class="code-cmd">claude mcp list</span>
-<span class="code-str">✓ cvte-harness — running</span></pre>
+      <div style="background:var(--bg-panel);border:1px solid var(--border);border-left:3px solid var(--orange);padding:28px 24px;margin-bottom:20px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;margin-bottom:12px;">内测阶段</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">暂未发布到 Marketplace</div>
+        <div style="font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:16px;">如需使用，请联系作者获取安装指引：</div>
+        <a href="mailto:jianghaodong@cvte.com" style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--orange);text-decoration:none;border:1px solid rgba(255,107,0,0.4);padding:10px 20px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,107,0,0.08)'" onmouseout="this.style.background='transparent'">
+          ✉ jianghaodong@cvte.com
+        </a>
       </div>
 
-      <div style="margin-top:24px">
-        <div style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text-mid)">首次使用配置：</div>
+      <div style="margin-top:20px">
+        <div style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:10px;">前置要求（获取安装包后）：</div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            运行 /cvte-harness:setup 进行配置引导
+            Python 3.8+、Claude Code CLI
           </div>
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            或直接使用任意 skill，系统自动提示配置
+            Jira / GitLab Personal Access Token
           </div>
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            配置保存在 ~/.cvte-harness/config.json
+            运行 /sst-devflow:setup 完成配置引导
+          </div>
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
+            <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
+            当前已在 Linux 上完成测试验证
           </div>
         </div>
       </div>
