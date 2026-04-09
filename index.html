@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SST-DevFlow AI — 系统软件团队 AI 工作流自动化平台</title>
+<title>CVTE Harness — AI 工作流自动化系统</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -1118,17 +1118,17 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">SST<span>—</span>DevFlow AI</div>
+  <div class="nav-logo">CVTE<span>—</span>HARNESS</div>
   <ul class="nav-links">
-    <li><a href="#background">为什么</a></li>
+    <li><a href="#background">背景</a></li>
+    <li><a href="#harness-def">Harness 定义</a></li>
     <li><a href="#architecture">架构</a></li>
-    <li><a href="#skills">功能</a></li>
-    <li><a href="#mcp">工具集</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#mcp">MCP 工具</a></li>
     <li><a href="#roadmap">路线图</a></li>
     <li><a href="#install">安装</a></li>
-    <li><a href="#harness-def">技术原理</a></li>
   </ul>
-  <span class="nav-badge">v1.1.0</span>
+  <span class="nav-badge">v1.5.0</span>
 </nav>
 
 <!-- HERO -->
@@ -1139,19 +1139,19 @@
   <div class="hero-tag">CVTE System Software Team</div>
 
   <h1 class="hero-title">
-    SST-DevFlow AI<br>
-    <span class="accent">让 AI 替你干活</span>
+    缺陷 Debug<br>
+    <span class="accent">重新定义</span>
   </h1>
 
-  <div class="hero-subtitle-en">Bug 修复 · 代码合入 · Jira 流转 · 全程自动化</div>
+  <div class="hero-subtitle-en">AI Workflow Automation for Embedded Engineers</div>
 
   <p class="hero-desc">
-    输入一句话，AI 自动完成：读 Jira → 分析代码 → 修复 → 提交 → 创建 MR → 流转状态。<br>
-    从此不再手动写 commit、填字段、切系统——<strong>专注在真正需要你的事情上</strong>。
+    基于 <strong>Harness Engineering</strong> 理念构建 —— 给 AI 搭建环境，让智能真正能用起来。<br>
+    从 Bug 分析到代码提交、Jira 流转，一条命令，全程自动化。
   </p>
 
   <div class="hero-cta-row">
-    <a href="#install" class="btn-primary">申请使用</a>
+    <a href="#install" class="btn-primary">立即安装</a>
     <a href="#architecture" class="btn-ghost">查看架构</a>
   </div>
 
@@ -1178,15 +1178,15 @@
 <!-- BACKGROUND -->
 <section id="harness-def">
   <div class="section-header fade-in">
-    <div class="section-label">// 技术原理</div>
-    <h2 class="section-title">SST-DevFlow AI 是怎么工作的<span class="dim">？底层架构</span></h2>
+    <div class="section-label">// 01 — Harness Definition</div>
+    <h2 class="section-title">什么是 Harness<span class="dim">？本项目如何对应？</span></h2>
   </div>
 
   <!-- 公式说明 -->
   <div class="fade-in" style="padding: 0 80px; margin-bottom: 2px;">
     <div style="background: var(--bg-panel); padding: 40px 48px; border-left: 3px solid var(--orange); position: relative; overflow: hidden;">
       <div style="position: absolute; top: 16px; right: 24px; font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 700; color: rgba(255,107,0,0.06); user-select: none;">≡</div>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 16px;">底层设计公式（Harness Engineering）</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 16px;">来自 learn-claude-code 的定义</div>
       <div style="font-family: 'JetBrains Mono', monospace; font-size: clamp(16px, 2.5vw, 26px); font-weight: 700; color: var(--text); margin-bottom: 24px; letter-spacing: 0.02em;">
         Harness = <span style="color: var(--orange);">Tools</span> + <span style="color: var(--cyan);">Knowledge</span> + <span style="color: var(--green);">Observation</span> + <span style="color: var(--amber);">Action Interfaces</span> + <span style="color: #CC88FF;">Permissions</span>
       </div>
@@ -1204,8 +1204,8 @@
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--purple); text-transform: uppercase; margin-bottom: 16px;">Layered Architecture</div>
       <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">分层 Harness 架构 — 通用层 + 领域扩展层</div>
       <div style="font-size: 13px; color: var(--text-mid); line-height: 1.8; margin-bottom: 28px; max-width: 720px;">
-        <strong style="color: var(--text);">SST-DevFlow AI 不是独立的 AI</strong>，而是<strong style="color: var(--purple);">基于 Claude Code 的领域特定扩展</strong>。
-        Claude Code 提供通用 AI 能力（文件操作、记忆、多 agent），SST-DevFlow AI 在其之上叠加 CVTE 系统软件工作流的专门化能力。
+        <strong style="color: var(--text);">cvte-harness 不是独立的 Harness</strong>，而是<strong style="color: var(--purple);">基于 Claude Code 的领域特定扩展</strong>。
+        Claude Code 提供通用 AI 能力（文件操作、记忆、多 agent），cvte-harness 在其之上叠加 CVTE 系统软件工作流的专门化能力。
       </div>
 
       <!-- 两层架构对比 -->
@@ -1214,7 +1214,7 @@
         <!-- cvte-harness 层 -->
         <div style="background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--purple); padding: 28px 24px;">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--purple);">SST-DevFlow AI</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--purple);">cvte-harness</div>
             <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; background: rgba(204,136,255,0.12); color: var(--purple); padding: 2px 8px; letter-spacing: 0.1em;">领域特定扩展</div>
           </div>
           <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.6;">为 CVTE 系统软件工作流提供专门化能力：</div>
@@ -1323,7 +1323,7 @@
           <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">CLAUDE.md（自动加载）</div>
           <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">分支命名规则</div>
           <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">Jira 字段 ID 映射</div>
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">技术栈仓库对应表</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">仓库路径参考表</div>
           <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--cyan); padding: 4px 8px; background: rgba(0,200,255,0.06);">SKILL.md 经验教训积累</div>
         </div>
         <div style="margin-top: 16px; font-size: 11px; color: var(--green);">✅ 结构化注入，不靠记忆</div>
@@ -1428,7 +1428,7 @@
           <div style="display: flex; flex-direction: column; gap: 6px;">
             <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px;">
               <span style="color: var(--amber); flex-shrink: 0;">fix-jira-bug:</span>
-              <span style="color: var(--text-mid);">Jira 流转必填字段、技术栈仓库映射</span>
+              <span style="color: var(--text-mid);">Jira 流转必填字段、仓库路径参考</span>
             </div>
             <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 11px;">
               <span style="color: var(--amber); flex-shrink: 0;">merge-to-release:</span>
@@ -1463,8 +1463,8 @@
         <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: var(--orange); text-transform: uppercase; margin-bottom: 12px;">Evolution Loop</div>
         <div style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">自进化闭环 — 超越标准定义</div>
         <div style="font-size: 13px; color: var(--text-mid); line-height: 1.8; max-width: 520px;">
-          标准 Harness 是静态的；SST-DevFlow AI 在此基础上增加了<strong style="color: var(--text);">自进化机制</strong>：
-          每次任务执行后自动评估 → 积累失败模式 → 每周分析 → 自动将 suggestions 写回 SKILL.md →
+          标准 Harness 是静态的；CVTE Harness 在此基础上增加了<strong style="color: var(--text);">自进化机制</strong>：
+          每次任务执行后自动评估 → 积累失败模式 → 新会话启动时自动分析 → 自动将 suggestions 写回 SKILL.md →
           下次执行时 Knowledge 更丰富。<strong style="color: var(--orange);">Harness 的能力随时间单调递增。</strong>
         </div>
       </div>
@@ -1484,8 +1484,8 @@
 
 <section id="background">
   <div class="section-header fade-in">
-    <div class="section-label">// 01 — Why</div>
-    <h2 class="section-title">为什么需要 SST-DevFlow AI<span class="dim">？</span></h2>
+    <div class="section-label">// 02 — Context</div>
+    <h2 class="section-title">为什么需要 CVTE Harness<span class="dim">？</span></h2>
   </div>
 
   <div class="bg-layout fade-in">
@@ -1576,7 +1576,7 @@
 
     <div class="flow-annotation">
       <strong>缺陷 Debug</strong> 贯穿研发测试、集成测试、生产测试三个阶段，是整个研发流程中 <strong>最耗工时</strong> 的环节。<br>
-      SST-DevFlow AI 在此切入：<strong>简单问题一步解决，复杂问题节约提交/填写/备注的重复劳动</strong>，让研发专注在真正有价值的工作上。
+      CVTE Harness 在此切入：<strong>简单问题一步解决，复杂问题节约提交/填写/备注的重复劳动</strong>，让研发专注在真正有价值的工作上。
     </div>
   </div>
 </section>
@@ -1584,7 +1584,7 @@
 <!-- ARCHITECTURE -->
 <section id="architecture">
   <div class="section-header fade-in">
-    <div class="section-label">// 02 — Architecture</div>
+    <div class="section-label">// 03 — Architecture</div>
     <h2 class="section-title">系统架构<span class="dim"> — 三层设计</span></h2>
   </div>
 
@@ -1597,7 +1597,7 @@
         <div class="arch-blocks">
           <div class="arch-block" style="border-color: var(--orange)">
             <div class="arch-block-title">Claude Code CLI</div>
-            <div class="arch-block-desc">用户在 Claude Code 中输入指令（如：帮我修复 H01252608-1797），AI 自动调度对应 Skill</div>
+            <div class="arch-block-desc">用户在 Claude Code 中输入指令（如：帮我修复 PROJ-5678），AI 自动调度对应 Skill</div>
             <div class="arch-block-tools">
               <span class="tool-chip">/ fix-jira-bug</span>
               <span class="tool-chip">/ merge-to-release</span>
@@ -1669,7 +1669,7 @@
 <!-- SKILLS -->
 <section id="skills">
   <div class="section-header fade-in">
-    <div class="section-label">// 03 — Skills</div>
+    <div class="section-label">// 04 — Skills</div>
     <h2 class="section-title">5 个核心 Skills<span class="dim"> — 端到端自动化</span></h2>
   </div>
 
@@ -1681,21 +1681,20 @@
         <div class="skill-icon">🐛</div>
         <div class="skill-meta">
           <div class="skill-name">fix-jira-bug</div>
-          <div class="skill-tag">● 全自动 · 4 决策分支 · Bug 修复核心工作流</div>
+          <div class="skill-tag">● 全自动 · 3 决策分支 · Bug 修复核心工作流</div>
         </div>
       </div>
       <p class="skill-desc">
         输入一个 Jira Bug ID，AI 自动完成：获取信息 → 分析代码 → 判断类型 → 修复/流转 → 提交代码 → 创建 MR → 流转 Jira 状态 → 质量评估。
-        对于<strong>无法修复的问题</strong>（芯片原厂闭源、跨技术栈、问题无效），及时终止并给出处理建议，避免无效工作。
+        对于<strong>无法修复的问题</strong>（芯片原厂闭源、问题无效），及时终止并给出处理建议，避免无效工作。
       </p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
         <div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.1em;margin-bottom:8px;">决策分支</div>
           <div class="skill-flow">
             <div class="flow-step"><span class="step-num">A1</span> 芯片原厂闭源 → 提示联动原厂<span class="branch-badge">ESCALATE</span></div>
-            <div class="flow-step"><span class="step-num">A2</span> 跨技术栈 → 建议流转其他工程师<span class="branch-badge">TRANSFER</span></div>
-            <div class="flow-step"><span class="step-num">A3</span> 问题无效 → 建议关闭<span class="branch-badge">CLOSE</span></div>
-            <div class="flow-step"><span class="step-num">A4</span> 本技术栈可修复 → 完整 9 步流程<span class="branch-badge">FIX</span></div>
+            <div class="flow-step"><span class="step-num">A2</span> 问题无效 → 建议关闭<span class="branch-badge">CLOSE</span></div>
+            <div class="flow-step"><span class="step-num">A3</span> 可修复 → 完整 9 步流程<span class="branch-badge">FIX</span></div>
           </div>
         </div>
         <div>
@@ -1751,23 +1750,8 @@
       </div>
     </div>
 
-    <!-- evaluate-task -->
-    <div class="skill-card">
-      <div class="skill-header">
-        <div class="skill-icon">📊</div>
-        <div class="skill-meta">
-          <div class="skill-name">evaluate-task</div>
-          <div class="skill-tag">● 自动触发 · 4 维度打分</div>
-        </div>
-      </div>
-      <p class="skill-desc">任务完成后自动评估。基于真实执行日志，从完成度、效率、质量、规范性四维度客观打分，输出结构化反馈和改进建议。</p>
-      <div class="skill-flow">
-        <div class="flow-step"><span class="step-num">→</span> 完成度 (0-10)：步骤是否完整</div>
-        <div class="flow-step"><span class="step-num">→</span> 效率 (0-10)：一次通过率/耗时</div>
-        <div class="flow-step"><span class="step-num">→</span> 质量 (0-10)：无错误/输出完整</div>
-        <div class="flow-step"><span class="step-num">→</span> 规范性 (0-10)：遵循 SOP</div>
-      </div>
-    </div>
+    <!-- evaluate-task deprecated, merged into evolve -->
+    <!-- evaluate-task card removed in v1.4.0 -->
 
     <!-- evolve -->
     <div class="skill-card">
@@ -1775,10 +1759,10 @@
         <div class="skill-icon">🔄</div>
         <div class="skill-meta">
           <div class="skill-name">evolve</div>
-          <div class="skill-tag">● 每周自动 · 自进化分析引擎</div>
+          <div class="skill-tag">● SessionEnd/Start hook 全自动 · 自进化分析引擎</div>
         </div>
       </div>
-      <p class="skill-desc">每周一 8:57 自动分析历史数据，识别高频失败模式，生成分级优化建议（高/中/低优先级），形成 AI 能力的持续改进闭环。</p>
+      <p class="skill-desc">v1.4.0 起全自动：SessionEnd hook 解析 session JSONL 生成 task-log，SessionStart hook 自动分析未处理数据，识别高频失败模式，生成分级优化建议，形成 AI 能力的持续改进闭环。支持 <code>harness_evolve(task_id=...)</code> 单任务评估。</p>
       <div class="skill-flow">
         <div class="flow-step"><span class="step-num">→</span> 统计分析：平均分/通过率/耗时</div>
         <div class="flow-step"><span class="step-num">→</span> 模式识别：高频失败自动浮现</div>
@@ -1793,7 +1777,7 @@
 <!-- MCP TOOLS -->
 <section id="mcp">
   <div class="section-header fade-in">
-    <div class="section-label">// 04 — MCP Tools</div>
+    <div class="section-label">// 05 — MCP Tools</div>
     <h2 class="section-title">15 个 MCP 工具<span class="dim"> — 深度系统集成</span></h2>
   </div>
 
@@ -1925,7 +1909,7 @@
 <!-- DUAL AI -->
 <section id="dual-ai">
   <div class="section-header fade-in">
-    <div class="section-label">// 05 — Dual AI</div>
+    <div class="section-label">// 06 — Dual AI</div>
     <h2 class="section-title">双 AI 协作<span class="dim"> — 执行 + 评估 + 进化</span></h2>
   </div>
 
@@ -1975,7 +1959,7 @@
           <div class="ai-node-item">统计分析</div>
           <div class="ai-node-item">失败模式识别</div>
           <div class="ai-node-item">优化建议生成</div>
-          <div class="ai-node-item">每周一自动运行</div>
+          <div class="ai-node-item">SessionStart hook 自动运行</div>
         </div>
       </div>
 
@@ -1986,7 +1970,7 @@
 <!-- ROADMAP -->
 <section id="roadmap">
   <div class="section-header fade-in">
-    <div class="section-label">// 06 — Roadmap</div>
+    <div class="section-label">// 07 — Roadmap</div>
     <h2 class="section-title">路线图<span class="dim"> — 从基础到平台</span></h2>
   </div>
 
@@ -1999,31 +1983,28 @@
         <div class="roadmap-title">缺陷 Debug 核心场景</div>
         <div class="roadmap-desc">
           端到端 Bug 修复自动化，覆盖 Jira/GitLab/Git 完整集成，双 AI 评估系统，自进化引擎。
-          当前在 Linux 环境下完成测试验证，内测阶段运行中。
+          Plugin 方式发布，claude plugin add 一键安装。
         </div>
         <div class="roadmap-tags">
           <span class="roadmap-tag done">fix-jira-bug ✓</span>
           <span class="roadmap-tag done">merge-to-release ✓</span>
           <span class="roadmap-tag done">MCP Server ✓</span>
           <span class="roadmap-tag done">评估系统 ✓</span>
-          <span class="roadmap-tag done">Linux 验证 ✓</span>
+          <span class="roadmap-tag done">Plugin 发布 ✓</span>
         </div>
       </div>
 
       <div class="roadmap-item">
         <div class="roadmap-dot"></div>
-        <div class="roadmap-phase">Phase 2 — 近期规划</div>
-        <div class="roadmap-title">质量提升 · 平台扩展 · 发布</div>
+        <div class="roadmap-phase">Phase 2 — 近期</div>
+        <div class="roadmap-title">多 IDE 适配</div>
         <div class="roadmap-desc">
-          全面优化执行质量与覆盖范围，完成 Marketplace 发布，支持更多 AI IDE 和操作系统。
+          扩展 Cursor、Codex、GitHub Copilot 兼容，让更多 AI IDE 用户受益。
         </div>
         <div class="roadmap-tags">
-          <span class="roadmap-tag">Skill 调试 — 提升一次完成率</span>
-          <span class="roadmap-tag">Dify 对接 — 日志分析降低 token</span>
-          <span class="roadmap-tag">扩展更多工作场景</span>
-          <span class="roadmap-tag">Cursor 支持</span>
-          <span class="roadmap-tag">Windows / macOS 支持</span>
-          <span class="roadmap-tag">Marketplace 发布</span>
+          <span class="roadmap-tag">Cursor 适配</span>
+          <span class="roadmap-tag">Codex 适配</span>
+          <span class="roadmap-tag">Copilot 适配</span>
         </div>
       </div>
 
@@ -2049,45 +2030,53 @@
 <!-- INSTALL -->
 <section id="install">
   <div class="section-header fade-in">
-    <div class="section-label">// 07 — Get Started</div>
-    <h2 class="section-title">快速开始<span class="dim"> — 申请使用</span></h2>
+    <div class="section-label">// 08 — Get Started</div>
+    <h2 class="section-title">快速开始<span class="dim"> — 三步上手</span></h2>
   </div>
 
   <div class="install-layout fade-in">
 
     <div class="install-panel">
       <div style="margin-bottom:24px">
-        <div style="font-size:18px;font-weight:700;margin-bottom:8px">获取访问权限</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:1.6">SST-DevFlow AI 目前处于内测阶段，尚未发布到 Marketplace。</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">安装</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6">前置要求：Python 3.8+、Claude Code CLI、Jira / GitLab Personal Access Token</div>
       </div>
 
-      <div style="background:var(--bg-panel);border:1px solid var(--border);border-left:3px solid var(--orange);padding:28px 24px;margin-bottom:20px;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;margin-bottom:12px;">内测阶段</div>
-        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">暂未发布到 Marketplace</div>
-        <div style="font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:16px;">如需使用，请联系作者获取安装指引：</div>
-        <a href="mailto:jianghaodong@cvte.com" style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--orange);text-decoration:none;border:1px solid rgba(255,107,0,0.4);padding:10px 20px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,107,0,0.08)'" onmouseout="this.style.background='transparent'">
-          ✉ jianghaodong@cvte.com
-        </a>
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="code-dot code-dot-r"></div>
+          <div class="code-dot code-dot-y"></div>
+          <div class="code-dot code-dot-g"></div>
+          <div class="code-block-title">bash</div>
+        </div>
+        <pre><span class="code-comment"># 1. 克隆仓库</span>
+<span class="code-prompt">$ </span><span class="code-cmd">git clone</span> <span class="code-str">https://github.com/kirk-haodong/cvte-harness.git</span>
+
+<span class="code-comment"># 2. 添加 Plugin（自动安装依赖）</span>
+<span class="code-prompt">$ </span><span class="code-cmd">claude plugin add</span> ./cvte-harness
+
+<span class="code-comment"># 3. 验证安装</span>
+<span class="code-prompt">$ </span><span class="code-cmd">claude plugin list</span>
+<span class="code-str">✓ cvte-harness@1.1.0</span>
+
+<span class="code-prompt">$ </span><span class="code-cmd">claude mcp list</span>
+<span class="code-str">✓ cvte-harness — running</span></pre>
       </div>
 
-      <div style="margin-top:20px">
-        <div style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:10px;">前置要求（获取安装包后）：</div>
+      <div style="margin-top:24px">
+        <div style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text-mid)">首次使用配置：</div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            Python 3.8+、Claude Code CLI
+            运行 /cvte-harness:setup 进行配置引导
           </div>
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            Jira / GitLab Personal Access Token
+            或直接使用任意 skill，系统自动提示配置
           </div>
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            运行 /sst-devflow:setup 完成配置引导
-          </div>
-          <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
-            <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            当前已在 Linux 上完成测试验证
+            配置保存在 ~/.cvte-harness/config.json
           </div>
         </div>
       </div>
@@ -2106,12 +2095,12 @@
           <div class="code-dot code-dot-g"></div>
           <div class="code-block-title">claude code — 修复 Bug</div>
         </div>
-        <pre><span class="code-prompt">You: </span><span class="code-cmd">帮我修复 H01252612-785</span>
+        <pre><span class="code-prompt">You: </span><span class="code-cmd">帮我修复 PROJ-1234</span>
 
 <span class="code-comment"># AI 自动执行：</span>
 <span class="code-str">✓</span> 获取 Jira Bug 信息
 <span class="code-str">✓</span> 分析代码，定位问题
-<span class="code-str">✓</span> 判断：本技术栈可修复
+<span class="code-str">✓</span> 判断：可修复
 <span class="code-str">✓</span> 修改代码并验证
 <span class="code-str">✓</span> git commit (标准模板)
 <span class="code-str">✓</span> git push → 创建 MR
@@ -2126,7 +2115,7 @@
           <div class="code-dot code-dot-g"></div>
           <div class="code-block-title">claude code — 合入 Release</div>
         </div>
-        <pre><span class="code-prompt">You: </span><span class="code-cmd">把 H01252612-785 合入 release_obm</span>
+        <pre><span class="code-prompt">You: </span><span class="code-cmd">把 PROJ-1234 合入 release_obm</span>
 
 <span class="code-comment"># AI 自动执行：</span>
 <span class="code-str">✓</span> 前置检查：3 个涉及仓库
@@ -2142,9 +2131,9 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">SST—DevFlow AI</div>
+  <div class="footer-logo">CVTE—HARNESS</div>
   <div class="footer-credit">
-    Based on Harness Engineering · Made with ❤ by CVTE System Software Team · v1.1.0
+    Based on Harness Engineering · Made with ❤ by CVTE System Software Team · v1.5.0
   </div>
 </footer>
 
