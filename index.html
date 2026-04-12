@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CVTE Harness — AI 工作流自动化系统</title>
+<title>SST-DevFlow AI — CVTE 系统软件 AI 工作流自动化平台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -1118,7 +1118,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">CVTE<span>—</span>HARNESS</div>
+  <div class="nav-logo">SST<span>—</span>DevFlow AI</div>
   <ul class="nav-links">
     <li><a href="#background">背景</a></li>
     <li><a href="#harness-def">Harness 定义</a></li>
@@ -1128,7 +1128,7 @@
     <li><a href="#roadmap">路线图</a></li>
     <li><a href="#install">安装</a></li>
   </ul>
-  <span class="nav-badge">v1.5.0</span>
+  <span class="nav-badge">v1.4.6</span>
 </nav>
 
 <!-- HERO -->
@@ -1136,17 +1136,17 @@
   <div class="hero-grid-bg"></div>
   <div class="hero-glow"></div>
 
-  <div class="hero-tag">CVTE System Software Team</div>
+  <div class="hero-tag">CVTE System Software Team — SST-DevFlow AI</div>
 
   <h1 class="hero-title">
-    缺陷 Debug<br>
-    <span class="accent">重新定义</span>
+    AI 工作流<br>
+    <span class="accent">SST-DevFlow</span>
   </h1>
 
-  <div class="hero-subtitle-en">AI Workflow Automation for Embedded Engineers</div>
+  <div class="hero-subtitle-en">SST-DevFlow AI · AI Workflow Automation for Embedded Engineers</div>
 
   <p class="hero-desc">
-    基于 <strong>Harness Engineering</strong> 理念构建 —— 给 AI 搭建环境，让智能真正能用起来。<br>
+    <strong>SST-DevFlow AI</strong> — 系统软件团队 AI 工作流自动化平台，基于 <strong>Harness Engineering</strong> 理念构建。<br>
     从 Bug 分析到代码提交、Jira 流转，一条命令，全程自动化。
   </p>
 
@@ -1771,6 +1771,24 @@
       </div>
     </div>
 
+    <!-- setup -->
+    <div class="skill-card">
+      <div class="skill-header">
+        <div class="skill-icon">⚙</div>
+        <div class="skill-meta">
+          <div class="skill-name">setup</div>
+          <div class="skill-tag">● 交互式引导 · 首次配置 / Token 过期重配</div>
+        </div>
+      </div>
+      <p class="skill-desc">首次使用或 Token 过期时的配置引导 skill。交互式收集 Jira/GitLab Personal Access Token 和用户名缩写，自动安装 SessionEnd/SessionStart hook，验证连接后完成配置。配置保存在 <code>~/.claude/settings/cvte-harness.json</code>。</p>
+      <div class="skill-flow">
+        <div class="flow-step"><span class="step-num">→</span> 检查现有配置是否缺失</div>
+        <div class="flow-step"><span class="step-num">→</span> 交互式收集 Jira / GitLab Token</div>
+        <div class="flow-step"><span class="step-num">→</span> 安装 SessionEnd/Start hook</div>
+        <div class="flow-step"><span class="step-num">→</span> 验证连接，配置完成</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -2049,18 +2067,19 @@
           <div class="code-dot code-dot-g"></div>
           <div class="code-block-title">bash</div>
         </div>
-        <pre><span class="code-comment"># 1. 克隆仓库</span>
-<span class="code-prompt">$ </span><span class="code-cmd">git clone</span> <span class="code-str">https://github.com/kirk-haodong/cvte-harness.git</span>
+        <pre><span class="code-comment"># 1. 在 Claude Code 中打开插件管理</span>
+<span class="code-prompt">$ </span><span class="code-cmd">/plugins</span>
 
-<span class="code-comment"># 2. 添加 Plugin（自动安装依赖）</span>
-<span class="code-prompt">$ </span><span class="code-cmd">claude plugin add</span> ./cvte-harness
+<span class="code-comment"># 2. 方向键 → 切换到 Marketplace，粘贴仓库地址安装</span>
+<span class="code-str">git@gitlab.gz.cvte.cn:jianghaodong/cvte-harness.git</span>
 
-<span class="code-comment"># 3. 验证安装</span>
-<span class="code-prompt">$ </span><span class="code-cmd">claude plugin list</span>
-<span class="code-str">✓ cvte-harness@1.1.0</span>
+<span class="code-comment"># 3. 重载插件</span>
+<span class="code-prompt">$ </span><span class="code-cmd">/reload-plugins</span>
+<span class="code-str">Reloaded: cvte-harness</span>
 
-<span class="code-prompt">$ </span><span class="code-cmd">claude mcp list</span>
-<span class="code-str">✓ cvte-harness — running</span></pre>
+<span class="code-comment"># 4. 首次配置</span>
+<span class="code-prompt">$ </span><span class="code-cmd">/cvte-harness:setup</span>
+<span class="code-str">✓ SST-DevFlow AI 配置完成</span></pre>
       </div>
 
       <div style="margin-top:24px">
@@ -2072,11 +2091,15 @@
           </div>
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            或直接使用任意 skill，系统自动提示配置
+            填写 Jira / GitLab Personal Access Token
           </div>
           <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
             <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
-            配置保存在 ~/.cvte-harness/config.json
+            配置保存在 ~/.claude/settings/cvte-harness.json
+          </div>
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--text-dim)">
+            <span style="color:var(--orange);font-family:'JetBrains Mono',monospace">→</span>
+            建议 Token 设置 30～90 天有效期，定期更新
           </div>
         </div>
       </div>
@@ -2131,9 +2154,9 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">CVTE—HARNESS</div>
+  <div class="footer-logo">SST—DevFlow AI</div>
   <div class="footer-credit">
-    Based on Harness Engineering · Made with ❤ by CVTE System Software Team · v1.5.0
+    Based on Harness Engineering · Made with ❤ by CVTE System Software Team · v1.4.6
   </div>
 </footer>
 
