@@ -1928,59 +1928,47 @@
 <section id="dual-ai">
   <div class="section-header fade-in">
     <div class="section-label">// 06 — Dual AI</div>
-    <h2 class="section-title">双 AI 协作<span class="dim"> — 执行 + 评估 + 进化</span></h2>
+    <h2 class="section-title">双 AI 协作<span class="dim"> — 执行 + evolve 自进化</span></h2>
   </div>
 
   <div class="dual-ai-canvas fade-in">
-    <div class="dual-ai-grid">
+    <div class="dual-ai-grid" style="grid-template-columns: 1fr auto 1fr;">
 
       <div class="ai-node ai-node-highlight">
         <div class="ai-node-icon">🤖</div>
         <div class="ai-node-title">生成器 AI</div>
         <div class="ai-node-role">Executor</div>
         <div class="ai-node-items">
-          <div class="ai-node-item">task_log_start()</div>
+          <div class="ai-node-item">接收 skill 触发指令</div>
           <div class="ai-node-item">执行工作流步骤</div>
-          <div class="ai-node-item">task_log_step() × N</div>
-          <div class="ai-node-item">task_log_save()</div>
+          <div class="ai-node-item">调用 MCP 工具完成任务</div>
+          <div class="ai-node-item">session JSONL 自动记录</div>
         </div>
       </div>
 
       <div class="ai-arrow">
         <div class="ai-arrow-line"></div>
-        <div class="ai-arrow-label">自动触发</div>
+        <div class="ai-arrow-label">SessionEnd/Start hook</div>
       </div>
 
       <div class="ai-node ai-node-highlight">
-        <div class="ai-node-icon">⚖</div>
-        <div class="ai-node-title">评估器 AI</div>
-        <div class="ai-node-role">Evaluator</div>
+        <div class="ai-node-icon">🔄</div>
+        <div class="ai-node-title">evolve 自进化引擎</div>
+        <div class="ai-node-role">Evaluator + Evolution</div>
         <div class="ai-node-items">
-          <div class="ai-node-item">完成度评分</div>
-          <div class="ai-node-item">效率评分</div>
-          <div class="ai-node-item">质量评分</div>
-          <div class="ai-node-item">规范性评分</div>
-          <div class="ai-node-item">识别失败模式</div>
+          <div class="ai-node-item">解析 session JSONL → task-log</div>
+          <div class="ai-node-item">4 维度质量评分</div>
+          <div class="ai-node-item">高频失败模式识别</div>
+          <div class="ai-node-item">分级优化建议生成</div>
+          <div class="ai-node-item">suggestions 自动写回 SKILL.md</div>
         </div>
       </div>
 
-      <div class="ai-arrow">
-        <div class="ai-arrow-line"></div>
-        <div class="ai-arrow-label">数据积累</div>
-      </div>
+    </div>
 
-      <div class="ai-node">
-        <div class="ai-node-icon">📈</div>
-        <div class="ai-node-title">自进化引擎</div>
-        <div class="ai-node-role">Evolution</div>
-        <div class="ai-node-items">
-          <div class="ai-node-item">统计分析</div>
-          <div class="ai-node-item">失败模式识别</div>
-          <div class="ai-node-item">优化建议生成</div>
-          <div class="ai-node-item">SessionStart hook 自动运行</div>
-        </div>
-      </div>
-
+    <div style="margin-top: 32px; padding: 16px 24px; background: rgba(255,107,0,0.06); border-left: 3px solid var(--orange); font-size: 13px; color: var(--text-mid); line-height: 1.8;">
+      <strong style="color: var(--orange);">v1.4.0 架构更新</strong>：evaluator（质量评估）与 evolution（进化分析）已合并为统一的 <strong style="color: var(--text);">evolve</strong> skill。
+      SessionEnd hook 自动采集数据，SessionStart hook 自动分析，<strong style="color: var(--text);">用户无感知，全程零操作</strong>。
     </div>
   </div>
 </section>
