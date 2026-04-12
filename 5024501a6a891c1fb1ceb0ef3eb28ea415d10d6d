@@ -1,0 +1,23 @@
+index.html
+  72466b6b7806b93b 6,1121,1131,1139,1142-1143,1146,1149,1774-1791,2070-2071,2073-2074,2076-2078,2080-2082,2094,2098,2102,2157,2159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.12",
+  "base_commit_sha": "5024501a6a891c1fb1ceb0ef3eb28ea415d10d6d",
+  "prompts": {
+    "72466b6b7806b93b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9c004d3a-1a3b-4bef-9e8a-f01abf4b8b3e",
+        "model": "Claude Sonnet 4.6"
+      },
+      "human_author": "江浩东",
+      "messages": [],
+      "total_additions": 44,
+      "total_deletions": 21,
+      "accepted_lines": 44,
+      "overriden_lines": 0
+    }
+  }
+}
